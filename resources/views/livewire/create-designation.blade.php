@@ -16,7 +16,8 @@
                          </form>
                     </div>
                     <div class="card-footer text-end">
-                         <button type="submit" class="btn btn-primary" wire:click="save">Submit</button>
+                         <a class="btn btn-secondary" href="{{route('designations.index')}}">Close</a>
+                         <button role="button" class="btn btn-primary" wire:click="save">Save</button>
                     </div>
                 </div>
            </div>

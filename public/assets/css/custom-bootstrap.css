@@ -1,0 +1,110 @@
+:root {
+    --bs-primary: #10b981;
+    --bs-secondary: #fb923c;
+    --bs-success: #4ade80;
+    --bs-danger: #ef4444;
+    --bs-warning: #facc15;
+    --bs-info: #38bdf8;
+    --bs-light: #f0fdf4;
+    --bs-dark: #0f172a;
+}
+:root {
+    --bs-primary:   #fb923c; /* Royal Blue */
+    --bs-secondary: #6b21a8; /* Royal Purple */
+    --bs-success:   #228b22; /* Emerald Green */
+    --bs-danger:    #b22222; /* Ruby Red */
+    --bs-warning:   #d4af37; /* Royal Gold */
+    --bs-info:      #4682b4; /* Steel Blue */
+    --bs-light:     #f3f4f6; /* Light Gray (cool tone) */
+    --bs-dark:      #1e293b; /* Charcoal Navy (elegant dark) */
+}
+
+/* Button Overrides */
+.btn-primary { background-color: var(--bs-primary) !important; border-color: var(--bs-primary) !important; color: #fff !important; }
+.btn-secondary { background-color: var(--bs-secondary) !important; border-color: var(--bs-secondary) !important; color: #fff !important; }
+.btn-success { background-color: var(--bs-success) !important; border-color: var(--bs-success) !important; color: #fff !important; }
+.btn-danger { background-color: var(--bs-danger) !important; border-color: var(--bs-danger) !important; color: #fff !important; }
+.btn-warning { background-color: var(--bs-warning) !important; border-color: var(--bs-warning) !important; color: #000 !important; }
+.btn-info { background-color: var(--bs-info) !important; border-color: var(--bs-info) !important; color: #000 !important; }
+.btn-light { background-color: var(--bs-light) !important; border-color: var(--bs-light) !important; color: #000 !important; }
+.btn-dark { background-color: var(--bs-dark) !important; border-color: var(--bs-dark) !important; color: #fff !important; }
+
+/* Backgrounds */
+.bg-primary { background-color: var(--bs-primary) !important; }
+.bg-secondary { background-color: var(--bs-secondary) !important; }
+.bg-success { background-color: var(--bs-success) !important; }
+.bg-danger { background-color: var(--bs-danger) !important; }
+.bg-warning { background-color: var(--bs-warning) !important; }
+.bg-info { background-color: var(--bs-info) !important; }
+.bg-light { background-color: var(--bs-light) !important; }
+.bg-dark { background-color: var(--bs-dark) !important; }
+
+/* Text Colors */
+.text-primary { color: var(--bs-primary) !important; }
+.text-secondary { color: var(--bs-secondary) !important; }
+.text-success { color: var(--bs-success) !important; }
+.text-danger { color: var(--bs-danger) !important; }
+.text-warning { color: var(--bs-warning) !important; }
+.text-info { color: var(--bs-info) !important; }
+.text-light { color: var(--bs-light) !important; }
+.text-dark { color: var(--bs-dark) !important; }
+
+/* Border Colors */
+.border-primary { border-color: var(--bs-primary) !important; }
+.border-secondary { border-color: var(--bs-secondary) !important; }
+.border-success { border-color: var(--bs-success) !important; }
+.border-danger { border-color: var(--bs-danger) !important; }
+.border-warning { border-color: var(--bs-warning) !important; }
+.border-info { border-color: var(--bs-info) !important; }
+.border-light { border-color: var(--bs-light) !important; }
+.border-dark { border-color: var(--bs-dark) !important; }
+
+/* Alerts */
+.alert-primary { background-color: var(--bs-primary) !important; color: #fff !important; border-color: var(--bs-primary) !important; }
+.alert-secondary { background-color: var(--bs-secondary) !important; color: #fff !important; border-color: var(--bs-secondary) !important; }
+.alert-success { background-color: var(--bs-success) !important; color: #fff !important; border-color: var(--bs-success) !important; }
+.alert-danger { background-color: var(--bs-danger) !important; color: #fff !important; border-color: var(--bs-danger) !important; }
+.alert-warning { background-color: var(--bs-warning) !important; color: #000 !important; border-color: var(--bs-warning) !important; }
+.alert-info { background-color: var(--bs-info) !important; color: #000 !important; border-color: var(--bs-info) !important; }
+.alert-light { background-color: var(--bs-light) !important; color: #000 !important; border-color: var(--bs-light) !important; }
+.alert-dark { background-color: var(--bs-dark) !important; color: #fff !important; border-color: var(--bs-dark) !important; }
+
+/* Badges */
+.badge-primary { background-color: var(--bs-primary) !important; color: #fff !important; }
+.badge-secondary { background-color: var(--bs-secondary) !important; color: #fff !important; }
+.badge-success { background-color: var(--bs-success) !important; color: #fff !important; }
+.badge-danger { background-color: var(--bs-danger) !important; color: #fff !important; }
+.badge-warning { background-color: var(--bs-warning) !important; color: #000 !important; }
+.badge-info { background-color: var(--bs-info) !important; color: #000 !important; }
+.badge-light { background-color: var(--bs-light) !important; color: #000 !important; }
+.badge-dark { background-color: var(--bs-dark) !important; color: #fff !important; }
+
+/* Table Colors */
+.table-primary { background-color: var(--bs-primary) !important; color: #fff !important; }
+.table-secondary { background-color: var(--bs-secondary) !important; color: #fff !important; }
+.table-success { background-color: var(--bs-success) !important; color: #fff !important; }
+.table-danger { background-color: var(--bs-danger) !important; color: #fff !important; }
+.table-warning { background-color: var(--bs-warning) !important; color: #000 !important; }
+.table-info { background-color: var(--bs-info) !important; color: #000 !important; }
+.table-light { background-color: var(--bs-light) !important; color: #000 !important; }
+.table-dark { background-color: var(--bs-dark) !important; color: #fff !important; }
+
+/* Toasts & Toast Headers */
+.text-bg-primary { background-color: var(--bs-primary) !important; color: #fff !important; }
+.text-bg-secondary { background-color: var(--bs-secondary) !important; color: #fff !important; }
+.text-bg-success { background-color: var(--bs-success) !important; color: #fff !important; }
+.text-bg-danger { background-color: var(--bs-danger) !important; color: #fff !important; }
+.text-bg-warning { background-color: var(--bs-warning) !important; color: #000 !important; }
+.text-bg-info { background-color: var(--bs-info) !important; color: #000 !important; }
+.text-bg-light { background-color: var(--bs-light) !important; color: #000 !important; }
+.text-bg-dark { background-color: var(--bs-dark) !important; color: #fff !important; }
+
+/* List Groups */
+.list-group-item-primary { background-color: var(--bs-primary) !important; color: #fff !important; }
+.list-group-item-secondary { background-color: var(--bs-secondary) !important; color: #fff !important; }
+.list-group-item-success { background-color: var(--bs-success) !important; color: #fff !important; }
+.list-group-item-danger { background-color: var(--bs-danger) !important; color: #fff !important; }
+.list-group-item-warning { background-color: var(--bs-warning) !important; color: #000 !important; }
+.list-group-item-info { background-color: var(--bs-info) !important; color: #000 !important; }
+.list-group-item-light { background-color: var(--bs-light) !important; color: #000 !important; }
+.list-group-item-dark { background-color: var(--bs-dark) !important; color: #fff !important; }

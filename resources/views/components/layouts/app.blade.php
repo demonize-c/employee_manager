@@ -8,8 +8,18 @@
         @include('components.includes.css')
     </head>
     <body>
-        {{ $slot }}
 
+    <div class="d-flex">
+    <!-- Sidebar -->
+    @include('components.includes.leftbar')
+
+    <!-- Main Content -->
+    <div class="flex-grow-1 d-flex flex-column">
+      <!-- Navbar -->
+      @include('components.includes.navbar')
+      {{$slot}}
+    </div>
+    </div>
         @include('components.includes.js')
     </body>
 </html>

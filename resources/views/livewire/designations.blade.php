@@ -8,7 +8,7 @@
                                 <h4>Designatons</h2>
                            </div>
                            <div class="col text-end">
-                                  <a class="btn btn-primary" href="{{route('designations.create')}}">Add</a>
+                                  <a class="btn btn-sm btn-primary" href="{{route('designations.create')}}"><i class="fa-solid fa-plus "></i> Add</a>
                            </div>
                        </div>
                    </div>
@@ -25,18 +25,20 @@
                                     <tr>
                                         <td>{{$designation->name}}</td>
                                         <td class="text-end">
-                                            <button class="btn btn-primary">Edit</button>
+                                            <a href="{{route('designations.edit',$designation->id)}}" class=""><i class="fa-solid fa-pencil text-primary"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                    </div>
+                   @if($designations->hasPages())
                    <div class="card-header">
                         <nav aria-label="Page navigation example">
                              {{$designations->links()}}
                         </nav>
                    </div>
+                   @endif
                </div>
            </div>
       </div>
