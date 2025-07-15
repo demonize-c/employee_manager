@@ -14,6 +14,7 @@ class Designations extends Component
     {
         return view('livewire.designations',[
             'designations' => Designation::paginate(10)
-        ]);
+        ])
+        ->extends('layouts.app');
     }
 }

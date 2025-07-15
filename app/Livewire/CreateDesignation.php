@@ -30,6 +30,8 @@ class CreateDesignation extends Component
     public function render()
     {
         
-        return view('livewire.create-designation');
+        return 
+        view('livewire.create-designation')
+        ->extends('layouts.app');
     }
 }

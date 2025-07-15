@@ -41,6 +41,8 @@ class EditDesignation extends Component
 
     public function render()
     {
-        return view('livewire.edit-designation');
+        return 
+        view('livewire.edit-designation')
+        ->extends('layouts.app');
     }
 }

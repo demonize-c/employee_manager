@@ -17,7 +17,10 @@
                     </div>
                     <div class="card-footer text-end">
                          <a class="btn btn-secondary" href="{{route('designations.index')}}">Close</a>
-                         <button role="button" class="btn btn-primary" wire:click="update">Update</button>
+                         <button role="button" class="btn btn-primary" wire:click="update">
+                              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" wire:loading wire:target="update"></span>
+                              <span wire:loading.remove wire:target="update">Update<span>
+                         </button>
                     </div>
                 </div>
            </div>

@@ -30,6 +30,12 @@ return [
 
     'disks' => [
 
+        'public' => [
+            'driver' => 'local',
+            'root' => public_path('media'), // this saves in public/uploads
+            // 'url'  => env('APP_URL').'/uploads',
+            'visibility' => 'public',
+        ],
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
@@ -38,14 +44,14 @@ return [
             'report' => false,
         ],
 
-        'public' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
-            'visibility' => 'public',
-            'throw' => false,
-            'report' => false,
-        ],
+        // 'public' => [
+        //     'driver' => 'local',
+        //     'root' => storage_path('app/public'),
+        //     'url' => env('APP_URL').'/storage',
+        //     'visibility' => 'public',
+        //     'throw' => false,
+        //     'report' => false,
+        // ],
 
         's3' => [
             'driver' => 's3',
