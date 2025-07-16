@@ -8,13 +8,19 @@ use Livewire\WithFileUploads;
 use App\Models\Designation;
 use App\Models\Employee;
 
+use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
+
 
 class CreateEmployee extends Component
 {
 
     use WithFileUploads;
+
+    public bool   $loading = false;
+
+    public bool $display_error = false;
 
     public string $desig_name = '';
     
@@ -47,7 +53,7 @@ class CreateEmployee extends Component
           ],
           'phone' => [ 
               'required',
-              'digits:10'
+              'digits:10',
           ],
           'designation.id'=> [
              'required',
@@ -88,25 +94,30 @@ class CreateEmployee extends Component
 
     public function save() 
     {
-          $this->validate();
-          
-          $filename = null;
+        try{
+            $this->validate();
+            
+            $filename = null;
 
-          if( $this->photo ) {
-             $filename = Str::random(15).'-'.time().'.'.$this->photo->getClientOriginalExtension();
-             $this->photo->storeAs('employee_pictures',  $filename , 'public');
-          }
+            if( $this->photo ) {
+                $filename = Str::random(15).'-'.time().'.'.$this->photo->getClientOriginalExtension();
+                $this->photo->storeAs('employee_pictures',  $filename , 'public');
+            }
 
-          $employee = new Employee;
-          $employee->name   = $this->pull('name');
-          $employee->email  = $this->pull('email');
-          $employee->phone  = $this->pull('phone');
-          $employee->doj    = $this->pull('doj');  
-          $employee->salary = $this->pull('salary');
-          $employee->photo  = $filename;
-          $employee->designation_id = $this->pull('designation')['id'];      
-          $employee->save();
-          return redirect()->route('employees.index');
+            $employee         = new Employee;
+            $employee->name   = $this->name;
+            $employee->email  = $this->email;
+            $employee->phone  = $this->phone;
+            $employee->doj    = $this->doj;
+            $employee->salary = $this->salary;
+            $employee->photo  = $filename;
+            $employee->designation_id = $this->pull('designation')['id'];      
+            $employee->save();
+            $this->dispatch('on-save', success: true,  message: 'Employee saved successfully.');
+        }catch( ValidationException $e ){
+            $this->dispatch('on-save', success: false, message: 'Validation failure occurred.');
+            throw $e;
+        }
     }
 
     public function select_designation( $id, $name)

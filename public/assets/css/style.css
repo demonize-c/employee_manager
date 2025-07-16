@@ -161,6 +161,9 @@ body {
     height: 3rem;
     color: #007bff;
 }
+/* .error {
+    display: none;
+} */
 
 @media (max-width: 768px) {
     .sidebar {

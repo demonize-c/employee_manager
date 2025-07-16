@@ -8,6 +8,7 @@ use Livewire\WithFileUploads;
 use App\Models\Designation;
 use App\Models\Employee;
 
+use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 
@@ -17,9 +18,9 @@ class EditEmployee extends Component
     use WithFileUploads;
 
 
-    public bool   $loading   = false;
+    public bool $loading  = false;
 
-    public string $ready     = '0';
+    public bool $display_error = false;
 
     public bool $open_desig = false;
 
@@ -108,42 +109,48 @@ class EditEmployee extends Component
       ];
     }
 
-    public function ready_reset(){
-        $this->ready = false;
-    }
+    // public function ready_reset(){
+    //     $this->ready = false;
+    // }
 
     public function update() 
     {
-          $this->loading = true;
 
-          $this->validate();
-          
-          $filename = null;
+         try{
 
-          if( $this->photo ) {
-             $filename = Str::random(15).'-'.time().'.'.$this->photo->getClientOriginalExtension();
-             $this->photo->storeAs('employee_pictures',  $filename , 'public');
-             
-             $old_path = public_path('media/employee_pictures/'. $this->employee->photo);
-             if ( file_exists($old_path) ) {
-                 unlink( $old_path );
-             }
-          }
+            $this->validate();
+          
+            $filename = null;
+  
+            if( $this->photo ) {
+               $filename = Str::random(15).'-'.time().'.'.$this->photo->getClientOriginalExtension();
+               $this->photo->storeAs('employee_pictures',  $filename , 'public');
+               
+               $old_path = public_path('media/employee_pictures/'. $this->employee->photo);
+               if ( file_exists($old_path) ) {
+                   unlink( $old_path );
+               }
+            }
+  
+            $employee         = $this->employee;
+            $employee->name   = $this->name;
+            $employee->email  = $this->email;
+            $employee->phone  = $this->phone;
+            $employee->doj    = $this->doj; 
+            $employee->salary = $this->salary;
+            
+            $employee->designation_id = $this->designation['id']?? null;
+            
+            if($filename){
+              $employee->photo  = $filename;
+            }
+            $employee->save();
+            $this->dispatch('on-update', success: true, message: 'Employee updated successfully.');
 
-          $employee         = $this->employee;
-          $employee->name   = $this->name;
-          $employee->email  = $this->email;
-          $employee->phone  = $this->phone;
-          $employee->doj    = $this->doj; 
-          $employee->salary = $this->salary;
-          
-          $employee->designation_id = $this->designation['id']?? null;
-          
-          if($filename){
-            $employee->photo  = $filename;
-          }
-          $employee->save();
-          $this->dispatch('on-update', success: true, message: 'Employee updated successfully.');
+         }catch( ValidationException $e ){
+            $this->dispatch('on-update', success: false, message: 'Validation failure occurred.');
+            throw $e;
+         }
     }
 
     public function render()

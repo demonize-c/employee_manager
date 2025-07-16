@@ -7,21 +7,27 @@
                     </div>
                     <div class="card-body">
                          
-                         <form action="" wire:ignore wire:key="is-ready-{{$ready}}" wire:init="ready_reset">
+                         <form action="">
                                 <div class="form-group mb-3">
                                     <label>Full Name</label>
                                     <input type="text" class="form-control" placeholder="Examples - Jhon Doe, Sundar Pichai" wire:model="name">
-                                     @error('name') <small class="text-danger">{{ $message }}  </small> @enderror 
+                                    @if( $display_error ) 
+                                         @error('name') <small class="text-danger">{{ $message }}  </small> @enderror 
+                                    @endif
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>Email Address</label>
                                     <input type="email" class="form-control" placeholder="Examples - jhondoe@gmail.com, etc" wire:model="email">
-                                     @error('email') <small class="text-danger">{{ $message }}  </small> @enderror 
+                                    @if( $display_error ) 
+                                        @error('email') <small class="text-danger">{{ $message }}  </small> @enderror 
+                                    @endif 
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>Phone Number</label>
                                     <input type="email" class="form-control" placeholder="Examples - +91 8100012345" wire:model="phone">
-                                     @error('phone') <small class="text-danger">{{ $message }}  </small> @enderror 
+                                    @if( $display_error )  
+                                       @error('phone') <small class="text-danger">{{ $message }}  </small> @enderror 
+                                    @endif
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>Designation</label>
@@ -57,17 +63,23 @@
                                         @endif
                                         </div>
 
-                                     @error('designation.id') <small class="text-danger">{{ $message }}  </small> @enderror 
+                                        @if( $display_error ) 
+                                          @error('designation.id') <small class="text-danger">{{ $message }}  </small> @enderror 
+                                        @endif
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>Date Of Joining</label>
                                     <input type="date" class="form-control" placeholder="" wire:model="doj">
-                                     @error('doj') <small class="text-danger">{{ $message }}  </small> @enderror 
+                                    @if( $display_error )  
+                                       @error('doj') <small class="text-danger">{{ $message }}  </small> @enderror 
+                                    @endif
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>Salary</label>
                                     <input type="number" class="form-control" placeholder="Examples - 10000,20000" wire:model="salary">
-                                     @error('salary') <small class="text-danger">{{ $message }}  </small> @enderror 
+                                    @if( $display_error )  
+                                       @error('salary') <small class="text-danger">{{ $message }}  </small> @enderror 
+                                    @endif
                                 </div>
                                 <div class="form-group mb-3">
                                       <label class="mb-2">Photo</label>
@@ -91,14 +103,16 @@
                                              <div class="form-text">Max size 2MB. Accepted: JPG, PNG, WebP</div>
                                         </div>
                                    </div>
-                                   @error('photo') <small class="text-danger">{{ $message }}  </small> @enderror 
+                                   @if( $display_error ) 
+                                     @error('photo') <small class="text-danger">{{ $message }}  </small> @enderror 
+                                   @endif
                                 </div>
                                 
                          </form>
                     </div>
                     <div class="card-footer text-end">
                          <a class="btn btn-secondary" href="{{route('employees.index')}}">Close</a>
-                         <button role="button" class="btn btn-primary" wire:click="update" @disabled($loading) >Update</button>
+                         <button role="button" class="btn btn-primary {{$loading? 'opacity-50':''}}" @click="$dispatch('start-update')" @disabled($loading)>Update</button>
                     </div>
                 </div>
            </div>
@@ -107,20 +121,31 @@
 
 @script
 <script>
+     $wire.on('start-update',function( event ){
+          $wire.set('display_error', false);
+          $wire.set('loading',true);
+          $wire.call('update');
+     });
+
      $wire.on('on-update',function( event ){
           setTimeout( function(){ 
                     Swal.fire({
                          icon:  event.success? 'success': 'error',
                          title: event.message,
                          toast: true,
-                         timer: 2000,
+                         timer: 3000,
                          position: 'top-end',
                          showConfirmButton: false,
-                         width:'400px'
+                         width:'400px',
+                         didClose: () => {
+                              if( event.success ) {
+                                 window.location.href = "{{route('employees.index')}}";
+                              }
+                         }
                     });
                     $wire.set('loading',false);
-                    $wire.set('ready',true);
-          },1500);
+                    $wire.set('display_error', !event.success );
+          },2000);
      });
 </script>
 @endscript
