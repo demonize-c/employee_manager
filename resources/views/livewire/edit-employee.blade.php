@@ -1,13 +1,13 @@
 <div class="container">
       <div class="row justify-content-center">
            <div class="col-md-6 mt-4">
-               <div class="card shadow-sm">
+               <div class="card shadow-sm {{$loading? 'opacity-50':''}}" >
                     <div class="card-header">
                            <h4 class="p-3">Edit Employee</h4>
                     </div>
                     <div class="card-body">
                          
-                         <form action="">
+                         <form action="" wire:ignore wire:key="is-ready-{{$ready}}" wire:init="ready_reset">
                                 <div class="form-group mb-3">
                                     <label>Full Name</label>
                                     <input type="text" class="form-control" placeholder="Examples - Jhon Doe, Sundar Pichai" wire:model="name">
@@ -98,12 +98,29 @@
                     </div>
                     <div class="card-footer text-end">
                          <a class="btn btn-secondary" href="{{route('employees.index')}}">Close</a>
-                         <button role="button" class="btn btn-primary" wire:click="update">
-                              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" wire:loading wire:target="update"></span>
-                              <span wire:loading.remove wire:target="update">Update<span>
-                         </button>
+                         <button role="button" class="btn btn-primary" wire:click="update" @disabled($loading) >Update</button>
                     </div>
                 </div>
            </div>
       </div>
 </div>
+
+@script
+<script>
+     $wire.on('on-update',function( event ){
+          setTimeout( function(){ 
+                    Swal.fire({
+                         icon:  event.success? 'success': 'error',
+                         title: event.message,
+                         toast: true,
+                         timer: 2000,
+                         position: 'top-end',
+                         showConfirmButton: false,
+                         width:'400px'
+                    });
+                    $wire.set('loading',false);
+                    $wire.set('ready',true);
+          },1500);
+     });
+</script>
+@endscript

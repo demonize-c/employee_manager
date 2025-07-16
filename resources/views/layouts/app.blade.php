@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <title>{{ $title ?? 'Page Title' }}</title>
+        @livewireStyles
         @include('includes.css')
         @yield('css')
     </head>
@@ -26,6 +27,7 @@
             </div>
         </div> <!-- end .main -->
         </div> <!-- end .wrapper -->
+        @livewireScripts
         @include('includes.js')
         @yield('js')
     </body>

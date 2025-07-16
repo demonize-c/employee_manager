@@ -16,6 +16,11 @@ class EditEmployee extends Component
 
     use WithFileUploads;
 
+
+    public bool   $loading   = false;
+
+    public string $ready     = '0';
+
     public bool $open_desig = false;
 
     public string $desig_name = '';
@@ -95,6 +100,7 @@ class EditEmployee extends Component
              'date_format:Y-m-d'
           ],
           'photo' => [
+             'nullable',
              'image',
              'mimes:jpeg,png,jpg,gif,svg',
              'max:2048'
@@ -102,8 +108,14 @@ class EditEmployee extends Component
       ];
     }
 
+    public function ready_reset(){
+        $this->ready = false;
+    }
+
     public function update() 
     {
+          $this->loading = true;
+
           $this->validate();
           
           $filename = null;
@@ -119,15 +131,19 @@ class EditEmployee extends Component
           }
 
           $employee         = $this->employee;
-          $employee->name   = $this->pull('name');
-          $employee->email  = $this->pull('email');
-          $employee->phone  = $this->pull('phone');
-          $employee->doj    = $this->pull('doj');  
-          $employee->salary = $this->pull('salary');
-          $employee->photo  = $filename;
-          $employee->designation_id = $this->pull('designation')['id'];      
+          $employee->name   = $this->name;
+          $employee->email  = $this->email;
+          $employee->phone  = $this->phone;
+          $employee->doj    = $this->doj; 
+          $employee->salary = $this->salary;
+          
+          $employee->designation_id = $this->designation['id']?? null;
+          
+          if($filename){
+            $employee->photo  = $filename;
+          }
           $employee->save();
-          return redirect()->route('employees.index');
+          $this->dispatch('on-update', success: true, message: 'Employee updated successfully.');
     }
 
     public function render()
