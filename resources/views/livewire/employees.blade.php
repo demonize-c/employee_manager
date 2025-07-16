@@ -1,6 +1,6 @@
 <div class="container">
       <div class="row justify-content-center">
-           <div class="col-md-8 mt-4">
+           <div class="col-md-10 mt-4">
                <div class="card shadow-sm">
                    <div class="card-header">
                        <div class="row">
@@ -18,7 +18,8 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                   <th class="text-start">Name</th>
+                                   <th class="text-start">#</th>
+                                   <th class="">Name</th>
                                    <th class="">Designation</th>
                                    <th class="">Date of Joining</th>
                                    <th class="">Salary</th>
@@ -28,6 +29,11 @@
                             <tbody>
                                 @foreach($employees as $employee)
                                     <tr>
+                                      <td class="text-start" style="max-width:120px;">
+                                          <div class="image-preview-wrapper">
+                                          <img class="preview-img" src="{{asset('media/employee_pictures/'.$employee->photo)}}" alt="">
+                                          </div>
+                                      </td>
                                         <td class="text-start">
                                            
                                              <span> {{$employee->name}}</span><br>
@@ -38,6 +44,7 @@
                                         <td class="">{{$employee->doj}}</td>
                                         <td class="">{{$employee->salary}}</td>
                                         <td class="text-end">
+                                            <a href="javascript:void(0)" ><i class="fa-solid fa-trash text-danger"></i></a>
                                             @if(Route::has('employees.edit'))
                                               <a href="{{route('employees.edit',$employee->id)}}" class=""><i class="fa-solid fa-pencil text-primary"></i></a>
                                             @endif

@@ -9,6 +9,10 @@ class Employees extends Component
 {
 
 
+    // public function delete( $id ){
+    //            $this->js(`alert('ok')`);
+    // }
+
     public function render()
     {
         return view('livewire.employees',[
