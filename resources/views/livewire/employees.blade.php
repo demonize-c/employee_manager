@@ -28,7 +28,7 @@
                                     <input 
                                         type="text" 
                                         class="form-control select2-selection" 
-                                        value="{{$search_desig['name']??''}}"
+                                        value="{{$search_dsg_id && $search_dsg_name? $search_dsg_name:'' }}"
                                         x-on:focus = "$wire.set('open_desig',true)"
                                         readonly
                                     >
@@ -42,7 +42,7 @@
                                             type="text" 
                                             class="form-control select2-search" 
                                             placeholder="Search..."
-                                            wire:model="search_desig_name"
+                                            wire:model="search_dsg_text"
                                             wire:keyup="$dispatch('search-designations')"
                                             x-init="$el.focus()"
                                         >
@@ -62,9 +62,6 @@
                             @endif
                             </div>
                     </div>
-                    <!-- <div class="col-md-2">
-                           <a href="javascript:void(0)" class="btn btn-primary w-100" wire:click="update_search">Search</a>
-                    </div> -->
                 </form>
            </div>
            <div class="col-md-10 mt-4">
@@ -78,6 +75,35 @@
                                 <h4>Employees</h2>
                            </div>
                            <div class="col text-end">
+                                @if(  $filter_applied )
+                                    <i 
+                                        class="
+                                            fa-solid 
+                                            fa-filter-circle-xmark
+                                            fa-lg
+                                            btn 
+                                            btn-sm 
+                                            me-3 
+                                            text-secondary
+                                        "
+                                        wire:click="clear_search" 
+                                    >
+                                    </i>
+                              @else
+                                     <i 
+                                        class="
+                                            fa-solid 
+                                            fa-filter 
+                                            fa-lg
+                                            btn 
+                                            btn-sm 
+                                            me-3 
+                                            text-warning
+                                        "
+                                        wire:click="update_search" 
+                                    >
+                                    </i>
+                              @endif
                               @if(Route::has('employees.create'))
                                   <a wire:navigate class="btn btn-sm btn-primary" href="{{route('employees.create')}}"><i class="fa-solid fa-plus "></i> Add</a>
                               @endif
@@ -98,7 +124,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                  @if( !$loading  && $employees->count() !== 0)
+                                  @if( $employees->count() !== 0)
                                     @foreach($employees as $employee)
                                         <tr>
                                         <td class="text-start" style="max-width:120px;">
@@ -130,7 +156,7 @@
                                   @endif
                                 </tbody>
                             </table>
-                            @if( !$loading && $employees->count() && $employees->hasPages())
+                            @if( $employees->count() && $employees->hasPages())
                                 <div class="">
                                         <nav aria-label="Page navigation example bg-none">
                                             {{$employees->links()}}
@@ -155,14 +181,6 @@
 
 @script
 <script>
-     function loadingActionWrapper( cb ) {
-            $wire.set('loading', true);
-            setTimeout(function() {
-                cb();
-                $wire.set('loading', false);
-            },2000);
-     }
-
      $wire.on('delete-action',function( deleteableId ){
         Swal.fire({
             title: 'Are you sure?',
@@ -199,8 +217,8 @@
                         showConfirmButton: false,
                         width:'400px'
                     });
+                    $wire.set('loading_hash',random_str(10));
                     $wire.set('loading',false);
-                    $wire.set('ready',true);
             },300);
      });
      

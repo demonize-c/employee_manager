@@ -21,15 +21,17 @@ class Employees extends Component
 
     public string $search_phone = '';
 
-    public array  $search_desig = [];
+    public string  $search_dsg_id  = '';
 
-    public string $search_desig_name = '';
+    public string  $search_dsg_name = '';
 
-    protected   $queryString = ['search_name', 'search_phone','search_desig.id'];
+    public string $search_dsg_text = '';
+
+    protected    $queryString = ['search_name', 'search_phone','search_dsg_id','search_dsg_name'];
 
     public bool $open_desig = false;
 
-    public    $designation_options;
+    public      $designation_options;
 
     protected $paginationTheme = 'bootstrap';
 
@@ -39,16 +41,19 @@ class Employees extends Component
 
     public string $loading_hash = '';
 
+    public bool $filter_applied = false;
+
     public function mount(){
             $this->loading_hash = Str::random(10);
             $this->update_designation_options();
+            $this->update_filter_flag();
             $this->dispatch('on-load');
     }
 
 
     public function get_designations(){
         return  
-        Designation::where('name','like','%'.$this->search_desig_name.'%')
+        Designation::where('name','like','%'.$this->search_dsg_text.'%')
         ->select('id','name')
         ->orderBy('name','asc')
         ->limit(10)
@@ -61,24 +66,48 @@ class Employees extends Component
 
     public function select_designation( $designation ){
        
-        $this->search_desig = $designation;
+        $this->search_dsg_id   = $designation['id'];
+        $this->search_dsg_name = $designation['name'];
         $this->reset_designation_search_input();
+        $this->update_filter_flag();
         $this->resetPage();
     }
 
     public function clear_designation(){
        
-        $this->search_desig = [];
+        $this->search_dsg_id   = '';
+        $this->search_dsg_name = '';
         $this->reset_designation_search_input();
+        $this->update_filter_flag();
         $this->resetPage();
     }
 
     public function reset_designation_search_input() 
     {
-        $this->search_desig_name = '';
+        $this->search_dsg_text = '';
         $this->update_designation_options();
     }
     
+    public function is_filter_applied() {
+        if(
+            !$this->search_name   && 
+            !$this->search_phone  &&
+            !$this->search_dsg_id &&
+            !$this->search_dsg_name
+        ){
+            return false;
+        }
+        return true;
+    }
+
+    public function update_filter_flag() 
+    {
+        if( $this->is_filter_applied() ) {
+          return $this->filter_applied = true;
+        }
+        return $this->filter_applied = false;
+    }
+
     public function deleteConfirmed( $deleteableId  ){
 
         try{
@@ -108,6 +137,17 @@ class Employees extends Component
 
     public function update_search()
     {
+        $this->update_filter_flag();
+        $this->resetPage();
+    }
+
+    public function clear_search()
+    {
+        $this->search_phone    = '';
+        $this->search_dsg_id   = '';
+        $this->search_dsg_name = '';
+        $this->search_name     = '';
+        $this->update_filter_flag();
         $this->resetPage();
     }
 
@@ -124,11 +164,11 @@ class Employees extends Component
         }
 
         if( 
-            isset($this->search_desig['name']) &&
-            isset($this->search_desig['id'])
+            $this->search_dsg_id &&
+            $this->search_dsg_name
         )
         {
-            $employees->where('designation_id',$this->search_desig['id']);
+            $employees->where('designation_id',$this->search_dsg_id );
         }
 
         $employees = $employees->orderBy('id','desc')->paginate(2);
