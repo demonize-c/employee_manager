@@ -8,6 +8,9 @@ use Livewire\WithPagination;
 use App\Models\Designation;
 use App\Models\Employee;
 
+
+use Illuminate\Support\Str;
+
 class Employees extends Component
 {
 
@@ -32,12 +35,14 @@ class Employees extends Component
 
     protected $listeners = ['delete-confirmed' => 'deleteConfirmed'];
 
-    public bool $loading  = false;
+    public bool $loading  = true;
 
-    public bool $ready    = true;
+    public string $loading_hash = '';
 
     public function mount(){
+            $this->loading_hash = Str::random(10);
             $this->update_designation_options();
+            $this->dispatch('on-load');
     }
 
 
@@ -57,18 +62,22 @@ class Employees extends Component
     public function select_designation( $designation ){
        
         $this->search_desig = $designation;
+        $this->reset_designation_search_input();
         $this->resetPage();
-        $this->dispatch('on-load');
     }
 
     public function clear_designation(){
        
         $this->search_desig = [];
-        $this->search_desig_name = '';
-        $this->update_designation_options();
-        $this->dispatch('on-load');
+        $this->reset_designation_search_input();
+        $this->resetPage();
     }
 
+    public function reset_designation_search_input() 
+    {
+        $this->search_desig_name = '';
+        $this->update_designation_options();
+    }
     
     public function deleteConfirmed( $deleteableId  ){
 
@@ -87,17 +96,14 @@ class Employees extends Component
         }
     }
 
-
-
-    public function ready_reset()
+    public function updatingPage($page)
     {
-        $this->ready = false;
-     
+        $this->loading = true;
     }
-
+ 
     public function updatedPage($page)
     {
-        $this->dispatch('on-load');
+       $this->dispatch('on-load');// This will run on every search and on paginate
     }
 
     public function update_search()

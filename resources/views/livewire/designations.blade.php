@@ -25,20 +25,21 @@
                                     <tr>
                                         <td>{{$designation->name}}</td>
                                         <td class="text-end">
-                                            <a href="{{route('designations.edit',$designation->id)}}" class=""><i class="fa-solid fa-pencil text-primary"></i></a>
+                                            <a wire:navigate href="{{route('designations.edit',$designation->id)}}" class=""><i class="fa-solid fa-pencil text-primary"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
+                        @if($designations->hasPages())
+                            <div class="">
+                                    <nav aria-label="Page navigation example bg-none">
+                                        {{$designations->links()}}
+                                    </nav>
+                            </div>
+                        @endif
                    </div>
-                   @if($designations->hasPages())
-                   <div class="card-header">
-                        <nav aria-label="Page navigation example">
-                             {{$designations->links()}}
-                        </nav>
-                   </div>
-                   @endif
+                   
                </div>
            </div>
       </div>

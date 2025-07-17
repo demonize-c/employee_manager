@@ -4,11 +4,16 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Designation;
+use Illuminate\Validation\ValidationException;
 
 class CreateDesignation extends Component
 {
 
     public string $name = '';
+
+    public bool $display_error = false;
+
+    public bool $loading = false;
 
     protected function rules()
     {
@@ -20,11 +25,16 @@ class CreateDesignation extends Component
     }
     public function save() 
     {
-           $this->validate();
-           $designation   = new Designation;
-           $designation->name = $this->pull('name');  
-           $designation->save();
-           return redirect()->route('designations.index');
+        try {
+            $this->validate();
+            $designation   = new Designation;
+            $designation->name = $this->name;  
+            $designation->save();
+            $this->dispatch('on-save', success: true,  message: 'Designation saved successfully.');
+       } catch (ValidationException $e) {
+            $this->dispatch('on-save', success: false, message: 'Validation failure occurred.');
+            throw $e;
+       }
     }
 
     public function render()

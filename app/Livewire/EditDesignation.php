@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Designation;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class EditDesignation extends Component
 {
@@ -13,6 +14,10 @@ class EditDesignation extends Component
 
     public  string $name;
     public ?Designation $designation;
+
+    public bool $display_error = false;
+
+    public bool $loading = false;
 
     public function mount(Designation $designation) 
     {
@@ -32,11 +37,17 @@ class EditDesignation extends Component
 
     public function update() 
     {
-           $this->validate();
-           $designation = $this->designation;
-           $designation->name = $this->pull('name');  
-           $designation->save();
-           return redirect()->route('designations.index');
+          
+           try {
+                $this->validate();
+                $designation = $this->designation;
+                $designation->name = $this->name;  
+                $designation->save();
+                $this->dispatch('on-update', success: true,  message: 'Designation updated successfully.');
+           } catch (ValidationException $e) {
+                $this->dispatch('on-update', success: false, message: 'Validation failure occurred.');
+                throw $e;
+           }
     }
 
     public function render()

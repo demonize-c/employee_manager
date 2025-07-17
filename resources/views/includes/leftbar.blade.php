@@ -5,7 +5,7 @@
         <ul class="nav flex-column">
            @if(Route::has('dashboard'))
            <li class="nav-item">
-             <a class="nav-link {{Route::is('dashboard')?'active':''}}" href="{{route('dashboard')}}" >
+             <a wire:navigate  class="nav-link {{Route::is('dashboard')?'active':''}}" href="{{route('dashboard')}}" >
                <i class="fa fa-tachometer-alt me-2"></i> Dashboard
              </a>
            </li>
@@ -21,7 +21,7 @@
                 
                  <ul class="nav flex-column ms-3">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{route('designations.index')}}">
+                        <a wire:navigate class="nav-link" href="{{route('designations.index')}}">
                            <i class="fa-solid fa-user-group me-2  {{Route::is('designations.*')?'text-primary':''}}"></i>
                             Designations
                         </a>
@@ -30,7 +30,7 @@
 
                 <ul class="nav flex-column ms-3">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{route('employees.index')}}">
+                        <a  wire:navigate class="nav-link" href="{{route('employees.index')}}">
                             <i class="fa-solid fa-users me-2 {{Route::is('employees.*')?'text-primary':''}}"></i>
                             Employees
                         </a>

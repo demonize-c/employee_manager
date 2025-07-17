@@ -1,0 +1,10 @@
+  
+     (function displayTableOnFirstLoad(){
+          setTimeout(function(){ $wire.set('loading', false) }, 2000);
+     })();
+ 
+ $wire.on('clear-designation',function( option ){
+            loadingActionWrapper(function(){
+                 $wire.call('clear_designation', option);
+            });
+     })

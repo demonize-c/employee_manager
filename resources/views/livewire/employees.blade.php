@@ -85,8 +85,8 @@
                        </div>
                    </div>
                    <div class="card-body">
-                       <div class="table-wrapper" wire:ignore wire:key="page-{{request()->query('page')}}-ready-{{$ready? '1': '0'}}">    
-                            <table class="table"  wire:init="ready_reset">
+                       <div class="table-wrapper" wire:ignore wire:key="{{$loading_hash}}">    
+                            <table class="table">
                                 <thead>
                                     <tr>
                                     <th class="text-start">#</th>
@@ -98,7 +98,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                  @if($employees->count() !== 0)
+                                  @if( !$loading  && $employees->count() !== 0)
                                     @foreach($employees as $employee)
                                         <tr>
                                         <td class="text-start" style="max-width:120px;">
@@ -130,9 +130,9 @@
                                   @endif
                                 </tbody>
                             </table>
-                            @if($employees->hasPages())
-                                <div class="card-footer">
-                                        <nav aria-label="Page navigation example">
+                            @if( !$loading && $employees->count() && $employees->hasPages())
+                                <div class="">
+                                        <nav aria-label="Page navigation example bg-none">
                                             {{$employees->links()}}
                                         </nav>
                                 </div>
@@ -155,7 +155,14 @@
 
 @script
 <script>
-    //  $wire.dispatch('on-load');
+     function loadingActionWrapper( cb ) {
+            $wire.set('loading', true);
+            setTimeout(function() {
+                cb();
+                $wire.set('loading', false);
+            },2000);
+     }
+
      $wire.on('delete-action',function( deleteableId ){
         Swal.fire({
             title: 'Are you sure?',
@@ -196,26 +203,25 @@
                     $wire.set('ready',true);
             },300);
      });
+     
      $wire.on('on-load',function( event ){
-            $wire.set('loading',true);
             setTimeout(() => {
+                    $wire.set('loading_hash',random_str(10));
                     $wire.set('loading',false);
-                    $wire.set('ready',true);
-            },300);
-     })
+            },1000);
+     });
 
      $wire.on('search-designations',function( event ){
             $wire.call('update_designation_options');
-     })
+     });
 
-     $wire.on('select-designation',function( option ){
+     $wire.on('select-designation',function( option, clear = false ){
             $wire.call('select_designation', option);
             $wire.set('open_desig',false);
-     })
+     });
 
-     $wire.on('clear-designation',function( option ){
+     $wire.on('clear-designation',function( option, clear = false ){
             $wire.call('clear_designation', option);
-            $wire.dispatch('on-load');
-     })
+     });
 </script>
 @endscript
