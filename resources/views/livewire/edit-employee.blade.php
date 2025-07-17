@@ -1,7 +1,7 @@
 <div class="container">
       <div class="row justify-content-center">
            <div class="col-md-6 mt-4">
-               <div class="card shadow-sm {{$loading? 'opacity-50':''}}" >
+               <div class="card shadow-sm" >
                     <div class="card-header">
                            <h4 class="p-3">Edit Employee</h4>
                     </div>
@@ -111,7 +111,7 @@
                          </form>
                     </div>
                     <div class="card-footer text-end">
-                         <a class="btn btn-secondary" href="{{route('employees.index')}}">Close</a>
+                         <a wire:navigate class="btn btn-secondary" href="{{route('employees.index')}}">Close</a>
                          <button role="button" class="btn btn-primary {{$loading? 'opacity-50':''}}" @click="$dispatch('start-update')" @disabled($loading)>Update</button>
                     </div>
                 </div>
@@ -139,13 +139,13 @@
                          width:'400px',
                          didClose: () => {
                               if( event.success ) {
-                                 window.location.href = "{{route('employees.index')}}";
+                                   Livewire.navigate("{{route('employees.index')}}");
                               }
                          }
                     });
                     $wire.set('loading',false);
                     $wire.set('display_error', !event.success );
-          },2000);
+          },3000);
      });
 </script>
 @endscript

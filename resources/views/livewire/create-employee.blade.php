@@ -111,7 +111,7 @@
                          </form>
                     </div>
                     <div class="card-footer text-end">
-                         <a class="btn btn-secondary" href="{{route('employees.index')}}">Close</a>
+                         <a wire:navigate class="btn btn-secondary" href="{{route('employees.index')}}">Close</a>
                          <button role="button" class="btn btn-primary {{$loading? 'opacity-50':''}}" @click="$dispatch('start-save')" @disabled($loading) >Save</button>
                     </div>
                 </div>
@@ -139,13 +139,13 @@
                          width:'400px',
                          didClose: () => {
                               if( event.success ) {
-                                 window.location.href = "{{route('employees.index')}}";
+                                   Livewire.navigate("{{route('employees.index')}}");
                               }
                          }
                     });
                     $wire.set('display_error', true);
                     $wire.set('loading',false);
-          },1500);
+          },3000);
      });
 </script>
 @endscript
