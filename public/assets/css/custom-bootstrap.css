@@ -114,3 +114,7 @@
 .opacity-50  { opacity: 0.5 !important; }
 .opacity-75  { opacity: 0.75 !important; }
 .opacity-100 { opacity: 1 !important; }
+
+.no-focus:focus {
+    box-shadow: none !important;
+}

@@ -75,35 +75,27 @@
                                 <h4>Employees</h2>
                            </div>
                            <div class="col text-end">
-                                @if(  $filter_applied )
-                                    <i 
-                                        class="
-                                            fa-solid 
-                                            fa-filter-circle-xmark
-                                            fa-lg
-                                            btn 
-                                            btn-sm 
-                                            me-3 
-                                            text-secondary
-                                        "
-                                        wire:click="clear_search" 
-                                    >
-                                    </i>
-                              @else
-                                     <i 
-                                        class="
-                                            fa-solid 
-                                            fa-filter 
-                                            fa-lg
-                                            btn 
-                                            btn-sm 
-                                            me-3 
-                                            text-warning
-                                        "
-                                        wire:click="update_search" 
-                                    >
-                                    </i>
-                              @endif
+                           <div class="btn-group btn-group-sm me-2" role="group">
+                                <button 
+                                    type="button" 
+                                    class="btn btn-outline-info {{$filter_applied?'text-danger':''}} no-focus"
+                                    wire:click="clear_search"
+                                    title="Clear Filters"
+                                >
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                                
+                                <button 
+                                    type="button" 
+                                    class="btn btn-outline-info no-focus"
+                                    wire:click="update_search"
+                                    title="Apply Filters"
+                                >
+                                    <i class="fa-solid fa-filter"></i>
+                                </button>
+                            </div>
+
+                             
                               @if(Route::has('employees.create'))
                                   <a wire:navigate class="btn btn-sm btn-primary" href="{{route('employees.create')}}"><i class="fa-solid fa-plus "></i> Add</a>
                               @endif
