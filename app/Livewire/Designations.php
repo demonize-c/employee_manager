@@ -79,7 +79,7 @@ class Designations extends Component
             $designations->where('name','like','%'. $this->search_name .'%');
         }
 
-        $designations = $designations->paginate(5);
+        $designations = $designations->orderBy('id','desc')->paginate(5);
 
         return view('livewire.designations',[
             'designations' => $designations

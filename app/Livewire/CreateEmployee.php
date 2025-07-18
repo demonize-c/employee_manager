@@ -69,7 +69,8 @@ class CreateEmployee extends Component
              'date_format:Y-m-d'
           ],
           'photo' => [
-             'required',
+            //  'required',
+             'nullable',
              'image',
              'mimes:jpeg,png,jpg,gif,svg',
              'max:2048'
