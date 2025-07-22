@@ -7,4 +7,4 @@
 
 <link rel="stylesheet" href="{{asset('libs/bootstrap-icons/bootstrap-icons.css')}}">
 
-<link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
+<link rel="stylesheet" href="{{asset('assets/css/style.css')}}?v={{time()}}">
