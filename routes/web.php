@@ -13,9 +13,9 @@ use App\Livewire\EditEmployee;
 
 //Route::get('/', CreatePost::class);
 
-//Route::get('/',Dashboard::class)->name('dashboard');
+Route::get('/',Dashboard::class)->name('dashboard');
 
-Route::get('/',Designations::class)->name('designations.index');
+Route::get('/designation',Designations::class)->name('designations.index');
 Route::get('/designations/create',CreateDesignation::class)->name('designations.create');
 Route::get('/designations/{designation}/edit',EditDesignation::class)->name('designations.edit');
 

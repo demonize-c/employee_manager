@@ -27,7 +27,7 @@
             </div>
         </div> <!-- end .main -->
         </div> <!-- end .wrapper -->
-        @livewireScripts
+        
         @include('includes.js')
         @yield('js')
     </body>

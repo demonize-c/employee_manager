@@ -18,20 +18,17 @@ class Designations extends Component
 
     use WithPagination;
     
-    protected $paginationTheme = 'bootstrap';
+    protected     $paginationTheme = 'bootstrap';
 
-    protected   $queryString = ['search_name'];
-
-    public bool   $loading = true;
-
-    public string $loading_hash = '';
+    protected     $queryString = ['search_name'];
 
     public string $search_name = '';
 
+    public bool  $loading = true;
+
     public function mount()
     {
-        $this->loading_hash = Str::random(10);
-        $this->dispatch('on-load');
+        
     }
 
     public function delete_confirmed( $deleteableId  ){
@@ -61,14 +58,8 @@ class Designations extends Component
         $this->resetPage();
     }
 
-    public function updatingPage($page)
-    {
-        $this->loading = true;
-    }
- 
-    public function updatedPage($page)
-    {
-       $this->dispatch('on-load');// This will run on every search and on paginate
+    public function loading_off(){
+           $this->loading = false;
     }
 
     public function render()
@@ -79,11 +70,15 @@ class Designations extends Component
             $designations->where('name','like','%'. $this->search_name .'%');
         }
 
-        $designations = $designations->orderBy('id','desc')->paginate(5);
+        $designations = $designations->orderBy('id','desc')->paginate(2);
 
         return view('livewire.designations',[
             'designations' => $designations
         ])
         ->extends('layouts.app');
     }
+
+    // public function rendered($html){
+    //     return 
+    // }
 }

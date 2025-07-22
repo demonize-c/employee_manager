@@ -12,9 +12,6 @@
                             wire:keydown.enter ="update_search"
                         >
                     </div>
-                    <!-- <div class="col-md-2">
-                           <a href="javascript:void(0)" class="btn btn-primary w-100" wire:click="update_search">Search</a>
-                    </div> -->
             </div>
            </div>
            <div class="col-md-8 mt-4">
@@ -30,21 +27,24 @@
                        </div>
                    </div>
                    <div class="card-body">
-                     <div class="table-wrapper" wire:ignore wire:key="{{$loading_hash}}">
-                        <table class="table">
+                     <div class="table-wrapper"  wire:init="loading_off">
+                        <table class="table"     wire:show="!loading"  wire:transition.scale.duration.150ms>
                             <thead>
                                 <tr>
                                    <th class="text-start">Name</th>
                                    <th class="text-end">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                               @if( $designations->count() !== 0)
+                            <tbody
+                                wire:key="{{ $designations->pluck('id')->join('-') }}??'-'"
+                                wire:transition.scale.duration.150ms
+                            >
+                               @if($designations->count() !== 0)
                                     @foreach($designations as $designation)
                                         <tr>
                                             <td>{{$designation->name}}</td>
                                             <td class="text-end">
-                                                <a href="javascript:void(0)" @click="$dispatch('delete-action', {{$designation->id}})"><i class="fa-solid fa-trash text-danger"></i></a>
+                                                <a href="javascript:void(0)" wire:click="$dispatch('delete-action', {{$designation->id}})"><i class="fa-solid fa-trash text-danger"></i></a>
                                                 @if( Route::has('designations.edit'))
                                                     <a wire:navigate href="{{route('designations.edit',$designation->id)}}" class=""><i class="fa-solid fa-pencil text-primary"></i></a>
                                                 @endif
@@ -52,27 +52,21 @@
                                         </tr>
                                     @endforeach
                                 @else
-
+                                      <tr ><td class="py-4"colspan="2">
+                                            <h4 class="text-center text-muted" >No Data</h4> 
+                                       </td></tr>
                                 @endif
                             </tbody>
                         </table>
-                        @if($designations->count() !== 0 && $designations->hasPages())
-                            <div class="">
-                                    <nav aria-label="Page navigation example bg-none">
+                        @if($designations->hasPages())
+                            <div class="" wire:show="!loading" wire:transition>
+                                    <nav aria-label="Page navigation example bg-none" wire:key="{{$designations->pluck('id')->join('-')??'0'}}" wire:transition>
                                         {{$designations->links()}}
                                     </nav>
                             </div>
                         @endif
                    </div>
-                    @if($loading)
-                        <div  class="table-loader-overlay" id="table-loader">
-                            <div class="text-center">
-                                <div class="spinner-border" role="status"></div>
-                                <div class="mt-2 fw-bold text-primary">Loading</div>
-                            </div>
-                        </div>
-                    @endif
-                    </div>
+                   </div>
                    
                </div>
            </div>
@@ -81,13 +75,6 @@
 
 @script
 <script>
-    $wire.on('on-load',function( event ){
-            setTimeout(() => {
-                    $wire.set('loading_hash',random_str(10));
-                    $wire.set('loading',false);
-            },1000);
-     });
-
      $wire.on('delete-action',function( deleteableId ){
         Swal.fire({
             title: 'Are you sure?',
@@ -98,7 +85,6 @@
             cancelButtonText:  'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
-               $wire.set('loading',true);
                return $wire.call('delete_confirmed', deleteableId);
             }
             Swal.fire({
@@ -124,8 +110,6 @@
                         showConfirmButton: false,
                         width:'400px'
                     });
-                    $wire.set('loading_hash',random_str(10));
-                    $wire.set('loading',false);
             },300);
      });
 </script>
