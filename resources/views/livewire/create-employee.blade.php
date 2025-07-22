@@ -1,6 +1,6 @@
 <div class="container">
       <div class="row justify-content-center">
-           <div class="col-md-6 mt-4">
+           <div class="col-10 col-lg-6">
                <div class="card shadow-sm">
                     <div class="card-header">
                            <h4 class="p-3">Create Employee</h4>

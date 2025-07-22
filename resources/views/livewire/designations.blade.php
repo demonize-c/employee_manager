@@ -26,9 +26,13 @@
                            </div>
                        </div>
                    </div>
-                   <div class="card-body">
-                     <div class="table-wrapper"  wire:init="loading_off">
-                        <table class="table"     wire:show="!loading"  wire:transition.scale.duration.150ms>
+                   <div class="card-body"  wire:init="loading_off">
+                        <div class="table-wrapper" wire:show="!loading" wire:transition.scale.duration.300ms> 
+                        <div
+                          wire:key="{{$designations->count() !==0? $designations->pluck('id')->join('-'):'xx'}}"  
+                          wire:transition.scale.duration.300ms
+                        >
+                        <table class="table">
                             <thead>
                                 <tr>
                                    <th class="text-start">Name</th>
@@ -36,8 +40,7 @@
                                 </tr>
                             </thead>
                             <tbody
-                                wire:key="{{ $designations->pluck('id')->join('-') }}??'-'"
-                                wire:transition.scale.duration.150ms
+                               
                             >
                                @if($designations->count() !== 0)
                                     @foreach($designations as $designation)
@@ -59,13 +62,18 @@
                             </tbody>
                         </table>
                         @if($designations->hasPages())
-                            <div class="" wire:show="!loading" wire:transition>
-                                    <nav aria-label="Page navigation example bg-none" wire:key="{{$designations->pluck('id')->join('-')??'0'}}" wire:transition>
+                            <div class="">
+                                    <nav 
+                                       aria-label="Page navigation example bg-none" 
+                                      
+                               
+                                    >
                                         {{$designations->links()}}
                                     </nav>
                             </div>
                         @endif
-                   </div>
+                        </div>
+                        </div>
                    </div>
                    
                </div>

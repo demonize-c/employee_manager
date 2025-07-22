@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light px-3">
-<button class="btn text-white d-lg-none me-3" onclick="toggleSidebar()">
+<button class="btn text-white d-lg-none me-3" id="sidebar_toggle_btn">
     <i class="fa fa-bars"></i>
 </button>
 <div class="ms-auto dropdown">

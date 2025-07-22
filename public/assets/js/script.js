@@ -9,3 +9,14 @@ function random_str(length) {
   }
   return result;
 }
+
+
+$(document).ready( function() {
+    $(document).on('click','#sidebar_toggle_btn', function(e){
+           e.stopPropagation();
+           $('#sidebar').toggleClass('active');
+    })
+    $(document).on('click','body', function(){
+           $('#sidebar.active').removeClass('active');
+     })
+})
