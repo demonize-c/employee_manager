@@ -11,7 +11,7 @@ use App\Models\Employee;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
-
+use App\Helpers\SupabaseStorageHelper;
 
 class CreateEmployee extends Component
 {
@@ -97,12 +97,11 @@ class CreateEmployee extends Component
     {
         try{
             $this->validate();
-            
             $filename = null;
 
             if( $this->photo ) {
-                $filename = Str::random(15).'-'.time().'.'.$this->photo->getClientOriginalExtension();
-                $this->photo->storeAs('employee_pictures',  $filename , 'public');
+                 $filename = Str::random(15).'-'.time().'.'.$this->photo->getClientOriginalExtension();
+                 $fileinfo = SupabaseStorageHelper::upload($this->photo, 'employee_photos/'. $filename);
             }
 
             $employee         = new Employee;
@@ -111,7 +110,7 @@ class CreateEmployee extends Component
             $employee->phone  = $this->phone;
             $employee->doj    = $this->doj;
             $employee->salary = $this->salary;
-            $employee->photo  = $filename;
+            $employee->photo  = json_encode($fileinfo);
             $employee->designation_id = $this->pull('designation')['id'];      
             $employee->save();
             $this->dispatch('on-save', success: true,  message: 'Employee saved successfully.');

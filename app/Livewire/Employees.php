@@ -36,7 +36,7 @@ class Employees extends Component
 
     protected     $paginationTheme = 'bootstrap';
 
-    protected     $listeners = ['delete-confirmed' => 'deleteConfirmed'];
+    // protected     $listeners = ['delete-confirmed' => 'deleteConfirmed'];
 
     //public bool    $loading  = true;
 

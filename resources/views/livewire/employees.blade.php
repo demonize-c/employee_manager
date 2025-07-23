@@ -1,22 +1,20 @@
 
 @section('css')
 <style>
-    .opacity-zero{
-        opacity:0;
-    }
-
-   .fade-in {
-       animation: fadeIn 2s ease forwards;
-    }
-
-    @keyframes fadeIn {
-        from {
+    @keyframes zoomIn {
+        0% {
             opacity: 0;
+            transform: scale(0.95);
         }
-        to {
+        100% {
             opacity: 1;
+            transform: scale(1);
         }
     }
+
+    .zoomIn {
+       animation: zoomIn 0.15s ease forwards;
+     }
 
 </style>
 @endsection
@@ -90,9 +88,9 @@
                    </div>
                    <div class="card-body" >
                          <div 
-                            class="table-wrapper opacity-zero fade-in"
-                            wire:loading.class.remove="fade-in"
-                            wire:target="gotoPage, nextPage, update_search, select_designation, clear_designation"
+                            class="table-wrapper animate__animated animate__zoomIn"
+                            wire:loading.class.remove="animate__zoomIn"
+                            wire:target="gotoPage, nextPage, update_search, select_designation, clear_designation, deleteConfirmed"
                          >    
                             <table class="table">
                                 <thead>
@@ -111,7 +109,7 @@
                                         <tr>
                                         <td class="text-start" style="" data-title="Photo">
                                             <div class="image-preview-wrapper">
-                                                <img class="preview-img" src="{{asset('media/employee_pictures/'.$employee->photo)}}" alt="">
+                                                <img class="preview-img" src="{{ $employee->photoUrl()}}" alt="">
                                             </div>
                                         </td>
                                             <td class="text-start" data-title="Name">
@@ -165,7 +163,7 @@
             cancelButtonText:  'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
-               return $wire.dispatch('delete-confirmed', { deleteableId });
+               return $wire.call('deleteConfirmed', deleteableId );
             }
             Swal.fire({
                 icon:  'info',

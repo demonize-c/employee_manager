@@ -12,6 +12,8 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 
+use App\Helpers\SupabaseStorageHelper;
+
 class EditEmployee extends Component
 {
 
@@ -131,6 +133,19 @@ class EditEmployee extends Component
                    unlink( $old_path );
                }
             }
+
+            $fileinfo = null;
+            
+            if( $this->photo ) {
+                 $filename = Str::random(15).'-'.time().'.'.$this->photo->extension();
+                 $fileinfo = SupabaseStorageHelper::upload($this->photo, 'employee_photos/'. $filename);
+                 $old_fileinfo = $this->employee->photo? 
+                                 json_decode($this->employee->photo,true):
+                                 null;
+                 if($old_fileinfo  && isset($old_fileinfo['Key'])){
+                    SupabaseStorageHelper::delete($old_fileinfo['Key']);
+                 }
+            }
   
             $employee         = $this->employee;
             $employee->name   = $this->name;
@@ -141,9 +156,10 @@ class EditEmployee extends Component
             
             $employee->designation_id = $this->designation['id']?? null;
             
-            if($filename){
-              $employee->photo  = $filename;
+            if($fileinfo){
+              $employee->photo  = json_encode($fileinfo);
             }
+            
             $employee->save();
             $this->dispatch('on-update', success: true, message: 'Employee updated successfully.');
 

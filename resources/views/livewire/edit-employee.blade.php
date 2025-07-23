@@ -83,7 +83,7 @@
                                 </div>
                                 <div class="form-group mb-3">
                                       <label class="mb-2">Photo</label>
-                                      <div x-data="{ preview: '{{asset('media/employee_pictures/'.$employee->photo)}}' }" class="row g-3 align-items-start">
+                                      <div x-data="{ preview: '{{$employee->photoUrl()}}' }" class="row g-3 align-items-start">
                                         <div class="col-md-4 text-center">
                                              <div class="image-preview-wrapper border rounded">
                                                   <template  x-if="preview">
