@@ -10,6 +10,7 @@ use App\Models\Employee;
 
 
 use Illuminate\Support\Str;
+use Livewire\Attributes\Locked;
 
 class Employees extends Component
 {
@@ -21,72 +22,75 @@ class Employees extends Component
 
     public string $search_phone = '';
 
-    public string  $search_dsg_id  = '';
+    public string  $search_dsg_id   = '';
 
     public string  $search_dsg_name = '';
 
-    public string $search_dsg_text = '';
+    public string  $search_dsg_text = '';
 
-    protected    $queryString = ['search_name', 'search_phone','search_dsg_id','search_dsg_name'];
+    protected     $queryString = ['search_name', 'search_phone','search_dsg_id','search_dsg_name'];
 
-    public bool $open_desig = false;
+    public bool   $open_desig = false;
 
-    public      $designation_options;
+    public        $designation_options;
 
-    protected $paginationTheme = 'bootstrap';
+    protected     $paginationTheme = 'bootstrap';
 
-    protected $listeners = ['delete-confirmed' => 'deleteConfirmed'];
+    protected     $listeners = ['delete-confirmed' => 'deleteConfirmed'];
 
-    public bool $loading  = true;
+    //public bool    $loading  = true;
 
-    public string $loading_hash = '';
+    public string  $loading_hash;
 
-    public bool $filter_applied = false;
+    public bool    $filter_applied = false;
+
+    #[Locked] 
+    public $old_hash;
+
+    public string $new_hash = 'xx';
 
     public function mount(){
             $this->loading_hash = Str::random(10);
-            $this->update_designation_options();
-            $this->update_filter_flag();
-            $this->dispatch('on-load');
+            //$this->update_designation_options();
+            // $this->update_filter_flag();
+            // $this->dispatch('on-load');
     }
 
 
-    public function get_designations(){
-        return  
-        Designation::where('name','like','%'.$this->search_dsg_text.'%')
-        ->select('id','name')
-        ->orderBy('name','asc')
-        ->limit(10)
-        ->get();
-    }
+    // public function get_designations(){
+    //     return  
+    //     Designation::where('name','like','%'.$this->search_dsg_text.'%')
+    //     ->select('id','name')
+    //     ->orderBy('name','asc')
+    //     ->limit(5)
+    //     ->get();
+    // }
 
-    public function update_designation_options() {
-        $this->designation_options = $this->get_designations();
-    }
+    // public function update_designation_options() {
+    //     $this->designation_options = $this->get_designations();
+    // }
 
     public function select_designation( $designation ){
        
         $this->search_dsg_id   = $designation['id'];
         $this->search_dsg_name = $designation['name'];
-        $this->reset_designation_search_input();
-        $this->update_filter_flag();
-        $this->resetPage();
+        //$this->reset_designation_search_input();
+        $this->update_search();
     }
 
     public function clear_designation(){
        
         $this->search_dsg_id   = '';
         $this->search_dsg_name = '';
-        $this->reset_designation_search_input();
-        $this->update_filter_flag();
-        $this->resetPage();
+       // $this->reset_designation_search_input();
+        $this->update_search();
     }
 
-    public function reset_designation_search_input() 
-    {
-        $this->search_dsg_text = '';
-        $this->update_designation_options();
-    }
+    // public function reset_designation_search_input() 
+    // {
+    //     $this->search_dsg_text = '';
+    //     $this->update_designation_options();
+    // }
     
     public function is_filter_applied() {
         if(
@@ -125,16 +129,6 @@ class Employees extends Component
         }
     }
 
-    public function updatingPage($page)
-    {
-        $this->loading = true;
-    }
- 
-    public function updatedPage($page)
-    {
-       $this->dispatch('on-load');// This will run on every search and on paginate
-    }
-
     public function update_search()
     {
         $this->update_filter_flag();
@@ -150,6 +144,7 @@ class Employees extends Component
         $this->update_filter_flag();
         $this->resetPage();
     }
+
 
     public function render()
     {
@@ -171,12 +166,11 @@ class Employees extends Component
             $employees->where('designation_id',$this->search_dsg_id );
         }
 
-        $employees = $employees->orderBy('id','desc')->paginate(2);
-
-        
+        $employees = $employees->orderBy('id','desc')->paginate(5);
         
         return view('livewire.employees',[
-            'employees' => $employees
+            'employees' => $employees,
+            'loading'   => $this->new_hash === 'xx' || $this->old_hash !== $this->new_hash
         ])->extends('layouts.app');
     }
 }

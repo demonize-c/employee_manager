@@ -45,8 +45,8 @@
                                @if($designations->count() !== 0)
                                     @foreach($designations as $designation)
                                         <tr>
-                                            <td>{{$designation->name}}</td>
-                                            <td class="text-end">
+                                            <td data-title="Name">{{$designation->name}}</td>
+                                            <td class="text-end" data-title="Action">
                                                 <a href="javascript:void(0)" wire:click="$dispatch('delete-action', {{$designation->id}})"><i class="fa-solid fa-trash text-danger"></i></a>
                                                 @if( Route::has('designations.edit'))
                                                     <a wire:navigate href="{{route('designations.edit',$designation->id)}}" class=""><i class="fa-solid fa-pencil text-primary"></i></a>

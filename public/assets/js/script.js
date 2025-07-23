@@ -16,7 +16,8 @@ $(document).ready( function() {
            e.stopPropagation();
            $('#sidebar').toggleClass('active');
     })
-    $(document).on('click','body', function(){
+    $(document).on('click','div.content', function(e){
+           e.stopPropagation();
            $('#sidebar.active').removeClass('active');
      })
 })

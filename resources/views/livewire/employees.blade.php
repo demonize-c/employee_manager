@@ -1,8 +1,31 @@
+
+@section('css')
+<style>
+    .opacity-zero{
+        opacity:0;
+    }
+
+   .fade-in {
+       animation: fadeIn 2s ease forwards;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+</style>
+@endsection
+
 <div class="container">
       <div class="row justify-content-center">
-           <div class="col-md-10 mt-4">
-               <form class="row  justify-content-between mt-2" id="searchForm">
-                    <div class="col-md-3">
+           <div class="col-md-10">
+               <form class="row  justify-content-between" id="searchForm">
+                    <div class="col-md-3 mb-2 mb-md-0">
                          <input 
                             type="text"
                             class="form-control" 
@@ -12,7 +35,7 @@
                             wire:keydown.enter ="update_search"
                         >
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 mb-2 mb-md-0">
                           <input 
                               type="text" 
                               class="form-control"
@@ -22,45 +45,8 @@
                               wire:keydown.enter ="update_search"
                             >
                     </div>
-                    <div class="form-group col-md-3">
-                        <div class="select2 select2-container" @click.outside = "$wire.set('open_desig',false)">
-                            <div class="input-group mb-3">
-                                    <input 
-                                        type="text" 
-                                        class="form-control select2-selection" 
-                                        value="{{$search_dsg_id && $search_dsg_name? $search_dsg_name:'' }}"
-                                        x-on:focus = "$wire.set('open_desig',true)"
-                                        readonly
-                                    >
-                                    <div class="input-group-append">
-                                        <span class="input-group-text" style="cursor:pointer;" x-on:click="$dispatch('clear-designation')">&times;</span>
-                                    </div>
-                            </div>
-                            @if($open_desig)
-                                <div class="select2-dropdown">
-                                        <input 
-                                            type="text" 
-                                            class="form-control select2-search" 
-                                            placeholder="Search..."
-                                            wire:model="search_dsg_text"
-                                            wire:keyup="$dispatch('search-designations')"
-                                            x-init="$el.focus()"
-                                        >
-                            
-                                        <ul class="select2-results">
-                                            @foreach($designation_options as $option)
-                                            <li 
-                                                class = "select2-option" 
-                                                wire:key   ="user-{{ $option->id }}"
-                                                @click = "$dispatch('select-designation',{id:{{$option->id}},name:'{{$option->name}}'})"
-                                            >
-                                                {{ $option->name }}
-                                            </li>
-                                            @endforeach
-                                        </ul>
-                                </div>
-                            @endif
-                            </div>
+                    <div class="form-group col-md-3 mb-2 mb-md-0">
+                        <livewire:designation-select-input :dsg_name="$search_dsg_name" :dsg_id="$search_dsg_id"/>
                     </div>
                 </form>
            </div>
@@ -102,8 +88,12 @@
                            </div>
                        </div>
                    </div>
-                   <div class="card-body">
-                       <div class="table-wrapper" wire:ignore wire:key="{{$loading_hash}}">    
+                   <div class="card-body" >
+                         <div 
+                            class="table-wrapper opacity-zero fade-in"
+                            wire:loading.class.remove="fade-in"
+                            wire:target="gotoPage, nextPage, update_search, select_designation, clear_designation"
+                         >    
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -119,21 +109,21 @@
                                   @if( $employees->count() !== 0)
                                     @foreach($employees as $employee)
                                         <tr>
-                                        <td class="text-start" style="max-width:120px;">
+                                        <td class="text-start" style="" data-title="Photo">
                                             <div class="image-preview-wrapper">
-                                            <img class="preview-img" src="{{asset('media/employee_pictures/'.$employee->photo)}}" alt="">
+                                                <img class="preview-img" src="{{asset('media/employee_pictures/'.$employee->photo)}}" alt="">
                                             </div>
                                         </td>
-                                            <td class="text-start">
+                                            <td class="text-start" data-title="Name">
                                             
                                                 <span> {{$employee->name}}</span><br>
                                                 <a href="mailto:{{$employee->email}}"> {{$employee->email}}</a><br>
                                                 <a href="tel:{{$employee->phone}}">{{$employee->phone}}</a>
                                             </td>
-                                            <td class="">{{$employee->designation->name}}</td>
-                                            <td class="">{{$employee->doj}}</td>
-                                            <td class="">{{$employee->salary}}</td>
-                                            <td class="text-end">
+                                            <td class="" data-title="Designation">{{$employee->designation->name}}</td>
+                                            <td class="" data-title="Date of Joining">{{$employee->doj}}</td>
+                                            <td class="" data-title="Salary">{{$employee->salary}}</td>
+                                            <td class="text-end" data-title="Action">
                                                 <a href="javascript:void(0)" @click="$dispatch('delete-action', {{$employee->id}})"><i class="fa-solid fa-trash text-danger"></i></a>
                                                 @if(Route::has('employees.edit'))
                                                 <a wire:navigate href="{{route('employees.edit',$employee->id)}}" class=""><i class="fa-solid fa-pencil text-primary"></i></a>
@@ -148,24 +138,16 @@
                                   @endif
                                 </tbody>
                             </table>
-                            @if( $employees->count() && $employees->hasPages())
+                            @if($employees->hasPages())
                                 <div class="">
                                         <nav aria-label="Page navigation example bg-none">
                                             {{$employees->links()}}
                                         </nav>
                                 </div>
                             @endif
-                           
-                        </div>
-                        @if($loading)
-                            <div  class="table-loader-overlay" id="table-loader">
-                                <div class="text-center">
-                                    <div class="spinner-border" role="status"></div>
-                                    <div class="mt-2 fw-bold text-primary">Loading</div>
-                                </div>
-                            </div>
-                        @endif
+                        </div>  
                    </div>
+                   <!-- card body -->
                </div>
            </div>
       </div>
@@ -183,7 +165,6 @@
             cancelButtonText:  'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
-               $wire.set('loading',true);
                return $wire.dispatch('delete-confirmed', { deleteableId });
             }
             Swal.fire({
@@ -209,29 +190,9 @@
                         showConfirmButton: false,
                         width:'400px'
                     });
-                    $wire.set('loading_hash',random_str(10));
-                    $wire.set('loading',false);
             },300);
-     });
-     
-     $wire.on('on-load',function( event ){
-            setTimeout(() => {
-                    $wire.set('loading_hash',random_str(10));
-                    $wire.set('loading',false);
-            },1000);
-     });
+     });;
 
-     $wire.on('search-designations',function( event ){
-            $wire.call('update_designation_options');
-     });
-
-     $wire.on('select-designation',function( option, clear = false ){
-            $wire.call('select_designation', option);
-            $wire.set('open_desig',false);
-     });
-
-     $wire.on('clear-designation',function( option, clear = false ){
-            $wire.call('clear_designation', option);
-     });
+    
 </script>
 @endscript
