@@ -1,7 +1,8 @@
+@php $delay = 1000; @endphp
 <div class="container">
       <div class="row justify-content-center">
            <div class="col-lg-6">
-               <div class="card shadow-sm">
+               <div class="card shadow-sm" x-data="{delay:5}">
                     <div class="card-header">
                            <h4 class="p-3">Create Employee</h4>
                     </div>
@@ -11,24 +12,50 @@
                                 <div class="form-group mb-3">
                                     <label>Full Name</label>
                                     <input type="text" class="form-control" placeholder="Examples - Jhon Doe, Sundar Pichai" wire:model="name">
-                                    @if( $display_error ) 
-                                         @error('name') <small class="text-danger">{{ $message }}  </small> @enderror 
-                                    @endif
+                                     
+                                         
+                                           <small 
+                                               class="text-danger"
+                                               wr:loading
+                                               wr:loading.hide="inline-block {{$delay}}"
+                                               wr:target="save"
+                                               style="display:none"
+                                            >
+                                            @error('name') 
+                                                {{ $message }} 
+                                            @enderror   
+                                           </small>
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>Email Address</label>
                                     <input type="email" class="form-control" placeholder="Examples - jhondoe@gmail.com, etc" wire:model="email">
-                                    @if( $display_error ) 
-                                        @error('email') <small class="text-danger">{{ $message }}  </small> @enderror 
-                                    @endif 
+                                    <small 
+                                        class="text-danger"
+                                        wr:loading
+                                        wr:loading.hide="inline-block {{$delay}}"
+                                        wr:target="save"
+                                        style="display:none"
+                                   >
+                                   @error('email') 
+                                        {{ $message }} 
+                                   @enderror   
+                                   </small>
                                     
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>Phone Number</label>
                                     <input type="email" class="form-control" placeholder="Examples - +91 8100012345" wire:model="phone">
-                                    @if( $display_error )  
-                                       @error('phone') <small class="text-danger">{{ $message }}  </small> @enderror 
-                                    @endif
+                                    <small 
+                                        class="text-danger"
+                                        wr:loading
+                                        wr:loading.hide="inline-block {{$delay}}"
+                                        wr:target="save"
+                                        style="display:none"
+                                   >
+                                   @error('phone') 
+                                        {{ $message }} 
+                                   @enderror   
+                                   </small>
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>Designation</label>
@@ -63,23 +90,47 @@
                                         </div>
                                         @endif
                                         </div>
-                                     @if( $display_error ) 
-                                        @error('designation.id') <small class="text-danger">{{ $message }}  </small> @enderror 
-                                     @endif
+                                        <small 
+                                             class="text-danger"
+                                             wr:loading
+                                             wr:loading.hide="inline-block {{$delay}}"
+                                             wr:target="save"
+                                             style="display:none"
+                                        >
+                                        @error('designation.id') 
+                                             {{ $message }} 
+                                        @enderror   
+                                        </small>
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>Date Of Joining</label>
                                     <input type="date" class="form-control" placeholder="" wire:model="doj">
-                                    @if( $display_error )  
-                                       @error('doj') <small class="text-danger">{{ $message }}  </small> @enderror 
-                                    @endif
+                                    <small 
+                                        class="text-danger"
+                                        wr:loading
+                                        wr:loading.hide="inline-block {{$delay}}"
+                                        wr:target="save"
+                                        style="display:none"
+                                   >
+                                   @error('doj') 
+                                        {{ $message }} 
+                                   @enderror   
+                                   </small>
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>Salary</label>
                                     <input type="number" class="form-control" placeholder="Examples - 10000,20000" wire:model="salary">
-                                    @if( $display_error )  
-                                       @error('salary') <small class="text-danger">{{ $message }}  </small> @enderror 
-                                    @endif
+                                    <small 
+                                        class="text-danger"
+                                        wr:loading
+                                        wr:loading.hide="inline-block {{$delay}}"
+                                        wr:target="save"
+                                        style="display:none"
+                                   >
+                                   @error('salary') 
+                                        {{ $message }} 
+                                   @enderror   
+                                   </small>
                                 </div>
                                 <div class="form-group mb-3">
                                       <label class="mb-2">Photo</label>
@@ -103,16 +154,46 @@
                                              <div class="form-text">Max size 2MB. Accepted: JPG, PNG, WebP</div>
                                         </div>
                                    </div>
-                                   @if( $display_error ) 
-                                     @error('photo') <small class="text-danger">{{ $message }}  </small> @enderror 
-                                   @endif
+                                   <small 
+                                        class="text-danger"
+                                        wr:loading
+                                        wr:loading.hide="inline-block {{$delay}}"
+                                        wr:target="save"
+                                        style="display:none"
+                                   >
+                                   @error('photo') 
+                                        {{ $message }} 
+                                   @enderror   
+                                   </small>
                                 </div>
                                 
                          </form>
                     </div>
-                    <div class="card-footer text-end">
+                    <div class="card-footer text-end" wire:ignore>
                          <a wire:navigate class="btn btn-secondary" href="{{route('employees.index')}}">Close</a>
-                         <button role="button" class="btn btn-primary {{$loading? 'opacity-50':''}}" @click="$dispatch('start-save')" @disabled($loading) >Save</button>
+                         <button  class="btn btn-success" wire:click="save"
+                            wr:loading
+                            wr:loading.attr="disabled {{$delay}}"
+                            wr:target="save"
+                         >
+                         <span 
+                            class="spinner-border spinner-border-sm"
+                            role="status" aria-hidden="true"
+                            wr:loading
+                            wr:loading.display="inline-block {{$delay}}"
+                            wr:target="save"
+                            style="display:none"
+                         >
+                         </span>
+                         <span
+                            wr:loading
+                            wr:loading.hide="inline {{$delay}}"
+                            wr:target="save"
+                         >
+                              Save
+                         </span> 
+                               
+                         </button>
                     </div>
                 </div>
            </div>
@@ -121,11 +202,11 @@
 
 @script
 <script>
-     $wire.on('start-save',function( event ){
-          $wire.set('display_error', false);
-          $wire.set('loading',true);
-          $wire.call('save');
-     });
+     // $wire.on('start-save',function( event ){
+     //      $wire.set('display_error', false);
+     //      $wire.set('loading',true);
+     //      $wire.call('save');
+     // });
 
      $wire.on('on-save',function( event ){
           setTimeout( function(){ 
@@ -143,8 +224,8 @@
                               }
                          }
                     });
-                    $wire.set('display_error', true);
-                    $wire.set('loading',false);
+                    // $wire.set('display_error', true);
+                    // $wire.set('loading',false);
           },3000);
      });
 </script>

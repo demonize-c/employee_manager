@@ -71,18 +71,53 @@ const customDirectives = {
               })
       }
 }
-// document.addEventListener('livewire:init', () => {
 
-//   const onLoadAddClass    = ( element, param, status ) => console.log( element,param,status)
-//   const onLoadRemoveClass = ( element, param, status ) => console.log( element,param,status )
-//    const directives = {
-//     'wr:loading.class' : onLoadAddClass,
-//     'wr:loading.class.remove' : onLoadRemoveClass
-//    };
-//    customDirectives.add('wr:loading.class', onLoadAddClass);
-//    customDirectives.add('wr:loading.class.remove', onLoadAddClass);
-//    customDirectives.init();
-// })
+customDirectives.add('wr:loading.hide', function(elem, param, status){
+    let params = param.trim().split(/\s+/);
+    let prop   = params.at(0);
+    let delay  = parseInt( params.at(1) );
+    if( status === 'start'){
+        return elem.style.display='none';
+    }
+    if( ['success','fail'].includes(status) ){
+        return  setTimeout(() => {
+                    elem.style.display=prop ;
+                }, delay);
+    }
+});
+customDirectives.add('wr:loading.display', function(elem, param, status){
+  
+    let params = param.trim().split(/\s+/);
+    let prop   = params.at(0);
+    let delay  = parseInt( params.at(1) );
+
+    if( status === 'start'){
+        return elem.style.display= prop;
+    }
+    if( ['success','fail'].includes(status) ){
+      return  setTimeout(() => {
+                  elem.style.display='none';
+              }, delay);
+    }
+});
+customDirectives.add('wr:loading.attr', function(elem, param, status){
+  let params = param.trim().split(/\s+/);
+  let attr   = params.at(0);
+  let delay  = parseInt( params.at(1) );
+
+  if( status === 'start'){
+      return elem.setAttribute(attr, '');
+  }
+  if( ['success','fail'].includes(status) ){
+      return  setTimeout(() => {
+                  elem.removeAttribute(attr);
+               }, delay );
+  }
+});
+document.addEventListener('livewire:init', () => {
+    customDirectives.init();
+})
+
 
 
 $(document).ready( function() {

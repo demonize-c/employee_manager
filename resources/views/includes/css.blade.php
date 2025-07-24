@@ -12,4 +12,7 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
 />
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/loadingio/loading.css@v2.0.0/dist/loading.min.css">
+
+
 <link rel="stylesheet" href="{{asset('assets/css/style.css')}}" data-navigate-once>
