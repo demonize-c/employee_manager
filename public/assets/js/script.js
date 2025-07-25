@@ -10,113 +10,253 @@ function random_str(length) {
   return result;
 }
 const customDirectives = {
-       directives: [ ],
+    directiveLookup: {},
+    eventLookup: {},
+  
+    generateId() {
+        return random_str(10);
+    },
 
-       add: function(dir, fn ) {
-            this.directives[dir] = fn;
-       },
+    add(directive, cb) {
+         this.directiveLookup[directive] = { directive, cb };
+    },
+  
+    init() {
+              this.setupElementObserver();
+              this.setupEventObserver();
+    },
+
+    runCallbacksOfEvent( event, status ) {
+        
+            if( !(event in this.eventLookup) ){
+                return;
+            }
+            
+            this.eventLookup[ event ]['']  =  status;
+
+            console.log(status,this.eventLookup)
+            let elements =  this.eventLookup[ event ].elements;
+
+            elements.forEach(( element ) => {
+                 this.runCallbacksOfElement( element, event, status )
+            })
+    },
+
+    runCallbacksOfElement( element, event, status ) {
+        var callbacks = this.getCallbacksByElement( element )
+        //this.eventLookup[ event ]['status']  =  status;
+
+        callbacks.forEach(( callback ) => {
+                  callback.method( 
+                        element, 
+                        callback.param, 
+                        status, 
+                        this.eventLookup[event]['startOn']
+                  );
+        });
+    },
+
+    canRunCallbackOfElement ( element ) { 
+          var triggers  = this.getTriggersByElement( element );
+          return triggers.some( ( trigger ) => this.eventLookup[trigger].status === 'start');
+    },
+
+    isOberservableElement ( element ) {
+          
+          const   directives = Object.keys(this.directiveLookup);
+          return  directives.some(( dir ) => 
+              element.getAttribute('wr:target') && element.getAttribute( dir)
+          );
+    },
+
+    getProcessableEventsByElement ( element ) {
+         var triggers  = this.getTriggersByElement( element );
+         return triggers.filter( ( trigger ) => this.eventLookup[trigger].status === 'start');
+    },
+
+    runProcessableEventsByElement( element ) {
        
-       init: function() {
-             this.deploy(this.directives);
-       },
+        var events = this.getProcessableEventsByElement( element )
+        events.map(( event ) => this.runCallbacksOfElement(element, event, 'start'));
+    }, 
 
-       deploy: function( directives ) {
-              
-              const elements = document.querySelectorAll(`[wr\\:loading]`);
-              var map = {};
-              elements.forEach(function( element, i){
-                  let target_methods_str  = element.getAttribute('wr:target')
-                  let target_methods  = target_methods_str? target_methods_str.split(',').map((method)=>method.trim()): [];
-                  var data  = { element, target_methods, hooks: []};
-                  Object.keys(directives ).forEach(( directive ) =>{
-                        const param = element.getAttribute(directive);
-                        if(param){
-                          data.hooks.push({method: directives[directive], param});
-                        }
-                  })
-                  
-                  target_methods.forEach(( method )=>{
-                        if(!(method in map)){
-                          map[ method ] = [];
-                        }
-                        map[method].push(data);
-                  })
-              })
-              Livewire.hook('commit', ({ component, commit, respond, succeed, fail }) => {
-                      var memo_hooks = [];
+    copyInlineStyles (fromEl, toEl)  {
+        toEl.style.cssText = fromEl.style.cssText;
+    },
+
+    setupElementObserver() {  
+
+            Livewire.hook('component.init',  ({ el, component }) => {
+                this.discoverElements()
+            })
+
+            Livewire.hook('morph.added', ({ el }) => {
+                console.log(el); 
+                if( this.isOberservableElement( el ) ){
+                    el.setAttribute('wr:id', this.generateId());
+                    this.registerElement( el );
+                    this.runProcessableEventsByElement(el)
+                }
+           })
+
+            Livewire.hook('morph.updating', ({ el, toEl, component }) => { 
+                   if( this.isOberservableElement( toEl ) ){
+                       this.copyInlineStyles(el, toEl);
+                   }
+            })
+    },
+    setupEventObserver(){
+          Livewire.hook('commit', ({ component, commit, respond, succeed, fail }) => {
+
                       var calls = commit.calls? commit.calls.map((c) => c.method): [];
-                      calls.forEach((call)=>{
-                          if(call in map){
-                              let elements = map[call];
-                              elements.forEach(({element, hooks})=>{
-                                  hooks.forEach((hook) =>{
-                                      memo_hooks.push({ element,...hook})
-                                  });
-                              })
-                          }
-                      })
-                      memo_hooks.forEach((hook)=> hook.method(hook.element, hook.param, 'start'));
+                      
+                      calls.forEach((call)=> {
+                          this.eventLookup[call]['startOn'] = Date.now(); 
+                          this.runCallbacksOfEvent( call, 'start'); 
+                      });
 
-                      respond((params)=>{
-                            memo_hooks.forEach((hook)=> hook.method(hook.element, hook.param, 'finish'));
-                      })
-                      
                       succeed(() => {
-                            memo_hooks.forEach((hook)=> hook.method(hook.element, hook.param, 'success'));
-                      })
-                      
-                      fail(() => {
-                            memo_hooks.forEach((hook)=> hook.method(hook.element, hook.param, 'fail'));
+                            queueMicrotask(() => {
+                                calls.forEach((call)=> {
+                                let excutiondelay = 1100 - (Date.now() - this.eventLookup[call]['startOn']) 
+                                    setTimeout(() => {
+                                            this.eventLookup[call]['startOn'] = 0;
+                                            this.runCallbacksOfEvent( call, 'processed') 
+                                    }, excutiondelay )
+                                });
+                            })
                       })
               })
-      }
-}
+    },
 
-customDirectives.add('wr:loading.hide', function(elem, param, status){
+    discoverElements() {
+        const elements = Array.from( document.querySelectorAll( this.getSelectQuery() ) );
+        elements.forEach(( element ) => {
+              element.setAttribute( 'wr:id', this.generateId())
+              this.registerElement( element );
+        });
+    },
+
+    registerElement( element ){
+        var triggers   = this.getTriggersByElement( element );
+        var callbacks  = this.getCallbacksByElement( element );
+        triggers.forEach(trigger => {
+            if (!(trigger in this.eventLookup)) {
+                this.eventLookup[ trigger ] = {
+                    name:     trigger,
+                    elements: [element],
+                    startOn: 0
+                };
+            } else {
+                const nodes = this.eventLookup[ trigger ].elements;
+                if( !this.isNodeInList( element, nodes) ){
+                    this.eventLookup[ trigger ].elements.push( element )
+                }
+            }
+        });
+    },
+    isNodeInList: function (node, nodes){
+        
+        return nodes.some( function( n ){
+             if(n.isSameNode(node) ) {
+                 return true
+             } 
+             if( node.getAttribute('wr:id') && 
+                 n.getAttribute('wr:id')  && 
+                 n.getAttribute('wr:id') === node.getAttribute('wr:id')
+             ){
+                return true;
+             }
+             return false;
+        });
+    },
+    getSelectQuery() {
+        const  escapeAttr = (attr) => attr.replace(/[:.]/g, match => `\\${match}`);
+        const  directives = Object.keys(this.directiveLookup);
+        const  query = directives.map(dir => `[wr\\:target][${ escapeAttr(dir)}]`).join(',');
+        return query;
+    },
+
+    getCallbacksByElement(element) {
+
+            const callbacks = [];
+            Object.keys(this.directiveLookup).forEach(directive => {
+                    const param = element.getAttribute(directive);
+                    if (param) {
+                        callbacks.push({
+                            method: this.directiveLookup[directive].cb,
+                            param,
+                        });
+                    }
+            });
+
+            return callbacks;
+    },
+  
+    getTriggersByElement(element) {
+      const attr = element.getAttribute('wr:target');
+      return attr ? attr.split(',').map(tr => tr.trim()) : [];
+    },
+    
+};
+  
+
+customDirectives.add('wr:loading.hide', function(elem, param, status, startOn){
     let params = param.trim().split(/\s+/);
     let prop   = params.at(0);
     let delay  = parseInt( params.at(1) );
+    let orgDelay =  delay - (Date.now() - startOn);
+
     if( status === 'start'){
         return elem.style.display='none';
     }
-    if( ['success','fail'].includes(status) ){
+    if( ['processed'].includes(status) ){
         return  setTimeout(() => {
                     elem.style.display=prop ;
-                }, delay);
+                }, orgDelay );
     }
 });
-customDirectives.add('wr:loading.display', function(elem, param, status){
+customDirectives.add('wr:loading.display', function(elem, param, status, startOn){
   
-    let params = param.trim().split(/\s+/);
-    let prop   = params.at(0);
-    let delay  = parseInt( params.at(1) );
+        let params = param.trim().split(/\s+/);
+        let prop   = params.at(0);
+        let delay  = parseInt( params.at(1) );
+        let orgDelay =  delay - (Date.now() - startOn);
+        if( status === 'start'){
+            return elem.style.display= prop;
+        }
+        if( ['processed'].includes(status) ){
+            return  setTimeout(() => {
+                        elem.style.display = 'none';
+            }, orgDelay );
+        }
+});
+
+customDirectives.add('wr:loading.attr', function(elem, param, status, startOn){
+    
+    let params   = param.trim().split(/\s+/);
+    let attr     = params.at(0);
+    let delay    = parseInt( params.at(1) );
+    let orgDelay =  delay - (Date.now() - startOn);
 
     if( status === 'start'){
-        return elem.style.display= prop;
+        return elem.setAttribute(attr, '');
     }
-    if( ['success','fail'].includes(status) ){
-      return  setTimeout(() => {
-                  elem.style.display='none';
-              }, delay);
+    if( ['processed'].includes(status) ){
+        return  setTimeout(() => {
+                    elem.removeAttribute(attr);
+                }, orgDelay );
     }
 });
-customDirectives.add('wr:loading.attr', function(elem, param, status){
-  let params = param.trim().split(/\s+/);
-  let attr   = params.at(0);
-  let delay  = parseInt( params.at(1) );
 
-  if( status === 'start'){
-      return elem.setAttribute(attr, '');
-  }
-  if( ['success','fail'].includes(status) ){
-      return  setTimeout(() => {
-                  elem.removeAttribute(attr);
-               }, delay );
-  }
-});
 document.addEventListener('livewire:init', () => {
     customDirectives.init();
 })
+
+// document.addEventListener('livewire:init', () => {
+//     // Livewire.hook('element.init', ({ el, component })=>console.log('added',el,component))
+//     // Livewire.hook('morph.updated', ({ el, component })=>console.log('updated',el,component))
+// })
 
 
 
@@ -129,6 +269,4 @@ $(document).ready( function() {
            e.stopPropagation();
            $('#sidebar.active').removeClass('active');
      })
-
-    
 })

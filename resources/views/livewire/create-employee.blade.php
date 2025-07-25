@@ -14,17 +14,18 @@
                                     <input type="text" class="form-control" placeholder="Examples - Jhon Doe, Sundar Pichai" wire:model="name">
                                      
                                          
+                                          @error('name')
                                            <small 
                                                class="text-danger"
                                                wr:loading
                                                wr:loading.hide="inline-block {{$delay}}"
                                                wr:target="save"
-                                               style="display:none"
-                                            >
-                                            @error('name') 
+                                               
+                                            > 
                                                 {{ $message }} 
-                                            @enderror   
+                                            
                                            </small>
+                                           @enderror   
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>Email Address</label>
@@ -181,7 +182,7 @@
                             role="status" aria-hidden="true"
                             wr:loading
                             wr:loading.display="inline-block {{$delay}}"
-                            wr:target="save"
+                            wr:target="save, update"
                             style="display:none"
                          >
                          </span>

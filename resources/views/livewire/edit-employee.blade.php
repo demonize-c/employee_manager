@@ -1,3 +1,4 @@
+@php $delay= 5000; @endphp
 <div class="container">
       <div class="row justify-content-center">
            <div class="col-md-6 mt-4">
@@ -77,9 +78,14 @@
                                 <div class="form-group mb-3">
                                     <label>Salary</label>
                                     <input type="number" class="form-control" placeholder="Examples - 10000,20000" wire:model="salary">
-                                    @if( $display_error )  
-                                       @error('salary') <small class="text-danger">{{ $message }}  </small> @enderror 
-                                    @endif
+                                   
+                                       @error('salary') 
+                                       <small 
+                                          class="text-danger"
+                                          wr:loading.hide="inline-block {{$delay}}"
+                                          wr:target="update"
+                                          style="display:none"
+                                       >{{ $message }}  </small> @enderror
                                 </div>
                                 <div class="form-group mb-3">
                                       <label class="mb-2">Photo</label>
@@ -112,7 +118,26 @@
                     </div>
                     <div class="card-footer text-end">
                          <a wire:navigate class="btn btn-secondary" href="{{route('employees.index')}}">Close</a>
-                         <button role="button" class="btn btn-primary {{$loading? 'opacity-50':''}}" @click="$dispatch('start-update')" @disabled($loading)>Update</button>
+                         <button  class="btn btn-success" wire:click="update"
+                            wr:loading.attr="disabled {{$delay}}"
+                            wr:target="update"
+                         >
+                         <span 
+                            class="spinner-border spinner-border-sm"
+                            role="status" aria-hidden="true"
+                            wr:loading.display="inline-block {{$delay}}"
+                            wr:target="update"
+                            style="display:none"
+                         >
+                         </span>
+                         <span
+                            wr:loading.hide="inline {{$delay}}"
+                            wr:target="update"
+                         >
+                            Update
+                         </span> 
+                               
+                         </button>
                     </div>
                 </div>
            </div>
@@ -139,7 +164,7 @@
                          width:'400px',
                          didClose: () => {
                               if( event.success ) {
-                                   Livewire.navigate("{{route('employees.index')}}");
+                                  // Livewire.navigate("{{route('employees.index')}}");
                               }
                          }
                     });
