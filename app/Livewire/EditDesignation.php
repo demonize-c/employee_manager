@@ -3,7 +3,10 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+
+use App\Traits\Notifier;
 use App\Models\Designation;
+
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
@@ -12,12 +15,10 @@ class EditDesignation extends Component
 
     // protected Designation $designation;
 
+    use Notifier;
+
     public  string $name;
     public ?Designation $designation;
-
-    public bool $display_error = false;
-
-    public bool $loading = false;
 
     public function mount(Designation $designation) 
     {
@@ -43,9 +44,9 @@ class EditDesignation extends Component
                 $designation = $this->designation;
                 $designation->name = $this->name;  
                 $designation->save();
-                $this->dispatch('on-update', success: true,  message: 'Designation updated successfully.');
+                $this->notify( true, 'Designation updated successfully.');
            } catch (ValidationException $e) {
-                $this->dispatch('on-update', success: false, message: 'Validation failure occurred.');
+                $this->notify( false, 'Validation failure occurred.');
                 throw $e;
            }
     }
