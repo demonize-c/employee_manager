@@ -26,6 +26,27 @@ function notify ({type, message, cb}) {
     });
 }
 
+function confirmDeletion ( onConfirm, onExit){
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'This action cannot be undone!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText:  'Cancel'
+    }).then((result) => {
+            if (result.isConfirmed) {
+                 if( onConfirm ) {
+                    return onConfirm();
+                 }
+            }
+            if( onExit ) { 
+              return onExit();
+            }
+            return;
+    });
+}
+
 $(document).ready( function() {
     $(document).on('click','#sidebar_toggle_btn', function(e){
            e.stopPropagation();

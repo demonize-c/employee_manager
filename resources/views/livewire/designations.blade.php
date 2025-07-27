@@ -1,3 +1,23 @@
+@section('css')
+<style>
+    @keyframes zoomIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .zoomIn {
+       animation: zoomIn 0.1s ease forwards;
+    }
+
+</style>
+@endsection
+
 <div class="container">
       <div class="row justify-content-center">
            <div class="col-md-8 mt-4">
@@ -7,16 +27,27 @@
                             type="text"
                             class="form-control" 
                             id="searchName"  
-                            placeholder="Search by Name"   
-                            wire:model="search_name" 
-                            wire:keydown.enter ="update_search"
+                            placeholder ="Search by Name"   
+                            wire:model ="search_name" 
+                            wire:keydown.enter ="updateSearch"
                         >
                     </div>
             </div>
            </div>
            <div class="col-md-8 mt-4">
                <div class="card shadow-sm">
-                   <div class="card-header">
+                   <div 
+                         class="card-header" 
+                         x-init="
+                         $wire.on('notify', ({success, message}) => {
+                                    notify({
+                                        type: ( success? 'success': 'error'), 
+                                        message
+                                   });
+                         });
+                         "
+                       
+                    >
                        <div class="row">
                            <div class="col">
                                 <h4>Designatons</h2>
@@ -26,12 +57,12 @@
                            </div>
                        </div>
                    </div>
-                   <div class="card-body"  wire:init="loading_off">
-                        <div class="table-wrapper" wire:show="!loading" wire:transition.scale.duration.300ms> 
-                        <div
-                          wire:key="{{$designations->count() !==0? $designations->pluck('id')->join('-'):'xx'}}"  
-                          wire:transition.scale.duration.300ms
-                        >
+                   <div class="card-body">
+                        <div  class="table-wrapper zoomIn"
+                              wire:loading.class.remove="zoomIn"
+                              wire:target="previousPage, nextPage, gotoPage, updateSearch, delete"
+                        > 
+                        <div>
                         <table class="table">
                             <thead>
                                 <tr>
@@ -44,10 +75,10 @@
                             >
                                @if($designations->count() !== 0)
                                     @foreach($designations as $designation)
-                                        <tr>
+                                        <tr x-data="{deletableId:{{$designation->id}} }" wire:key="dsg-{{$designation->id}}">
                                             <td data-title="Name">{{$designation->name}}</td>
                                             <td class="text-end" data-title="Action">
-                                                <a href="javascript:void(0)" wire:click="$dispatch('delete-action', {{$designation->id}})"><i class="fa-solid fa-trash text-danger"></i></a>
+                                                <a href="javascript:void(0)" @click="confirmDeletion(()=>$wire.call('delete',deletableId),() => notify({message:'Action aborted.'}))"><i class="fa-solid fa-trash text-danger"></i></a>
                                                 @if( Route::has('designations.edit'))
                                                     <a wire:navigate href="{{route('designations.edit',$designation->id)}}" class=""><i class="fa-solid fa-pencil text-primary"></i></a>
                                                 @endif
@@ -65,8 +96,6 @@
                             <div class="">
                                     <nav 
                                        aria-label="Page navigation example bg-none" 
-                                      
-                               
                                     >
                                         {{$designations->links()}}
                                     </nav>
@@ -80,45 +109,3 @@
            </div>
       </div>
 </div>
-
-@script
-<script>
-     $wire.on('delete-action',function( deleteableId ){
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'This action cannot be undone!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText:  'Cancel'
-        }).then((result) => {
-            if (result.isConfirmed) {
-               return $wire.call('delete_confirmed', deleteableId);
-            }
-            Swal.fire({
-                icon:  'info',
-                title: 'Operation was cancelled.',
-                toast: true,
-                timer: 2000,
-                position: 'top-end',
-                showConfirmButton: false
-            });
-        });
-     });
-
-     $wire.on('on-delete',function( event ){
-        
-            setTimeout( function(){ 
-                    Swal.fire({
-                        icon:  event.success? 'success': 'error',
-                        title: event.message,
-                        toast: true,
-                        timer: 2000,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        width:'400px'
-                    });
-            },300);
-     });
-</script>
-@endscript

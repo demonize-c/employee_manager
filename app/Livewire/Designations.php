@@ -5,18 +5,17 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+use App\Traits\Notifier;
 use App\Models\Designation;
-
 use App\Models\Employee;
-
-
-use Illuminate\Support\Str;
 
 class Designations extends Component
 {
 
 
     use WithPagination;
+
+    use Notifier;
     
     protected     $paginationTheme = 'bootstrap';
 
@@ -24,14 +23,12 @@ class Designations extends Component
 
     public string $search_name = '';
 
-    public bool  $loading = true;
-
     public function mount()
     {
         
     }
 
-    public function delete_confirmed( $deleteableId  ){
+    public function delete( $deleteableId  ){
 
         try{
           $designation = Designation::find( $deleteableId );
@@ -45,21 +42,17 @@ class Designations extends Component
           }
 
           $designation->delete();
-          $this->dispatch('on-delete', success: true, message: 'Designation deleted successfully.');
+          $this->notify( true, 'Designation deleted successfully.');
 
         }catch(\Exception $e){
-            
-            $this->dispatch('on-delete', success: false, message: $e->getMessage()?? 'Operation failed.');
+           
+            $this->notify( false, $e->getMessage()?? 'Operation failed.');
         }
     }
 
-    public function update_search()
+    public function updateSearch()
     {
         $this->resetPage();
-    }
-
-    public function loading_off(){
-           $this->loading = false;
     }
 
     public function render()
