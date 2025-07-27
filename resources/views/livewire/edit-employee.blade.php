@@ -2,7 +2,24 @@
 <div class="container">
       <div class="row justify-content-center">
            <div class="col-md-6 mt-4">
-               <div class="card shadow-sm" >
+               <div class="card shadow-sm" 
+                    x-data="{loading:false}"
+                    x-init="
+                      $wire.on('notify', ({success, message}) => {
+                              setTimeout(() =>  {
+                                    loading = false;
+                                    notify({
+                                        type: ( success? 'success': 'error'), 
+                                        message,
+                                        cb: ( success? 
+                                              () => Livewire.navigate('{{route('employees.index')}}') :
+                                              null )
+                                   });
+                              }, 2000);
+                         });
+                    "
+
+               >
                     <div class="card-header">
                            <h4 class="p-3">Edit Employee</h4>
                     </div>
@@ -12,80 +29,86 @@
                                 <div class="form-group mb-3">
                                     <label>Full Name</label>
                                     <input type="text" class="form-control" placeholder="Examples - Jhon Doe, Sundar Pichai" wire:model="name">
-                                    @if( $display_error ) 
-                                         @error('name') <small class="text-danger">{{ $message }}  </small> @enderror 
-                                    @endif
+                                    @error('name') <small class="text-danger">{{ $message }}  </small> @enderror 
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>Email Address</label>
                                     <input type="email" class="form-control" placeholder="Examples - jhondoe@gmail.com, etc" wire:model="email">
-                                    @if( $display_error ) 
-                                        @error('email') <small class="text-danger">{{ $message }}  </small> @enderror 
-                                    @endif 
+                                    @error('email') <small class="text-danger">{{ $message }}  </small> @enderror
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>Phone Number</label>
                                     <input type="email" class="form-control" placeholder="Examples - +91 8100012345" wire:model="phone">
-                                    @if( $display_error )  
-                                       @error('phone') <small class="text-danger">{{ $message }}  </small> @enderror 
-                                    @endif
+                                     @error('phone') <small class="text-danger">{{ $message }}  </small> @enderror
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>Designation</label>
-                                    <div class="select2 select2-container" @click.outside = "$wire.set('open_desig',false)">
-                                        <div class="input-group mb-3">
-                                             <input 
-                                                  type="text" 
-                                                  class="form-control select2-selection" 
-                                                  value="{{$designation['name']??''}}"
-                                                  x-on:focus = "$wire.set('open_desig',true)"
-                                                  readonly
-                                             >
-                                             <div class="input-group-append">
-                                                  <span class="input-group-text" x-on:click="$wire.call('clear_designation')">&times;</span>
-                                             </div>
-                                        </div>
-                                        @if($open_desig)
-                                        <div class="select2-dropdown">
-                                             <input type="text" class="select2-search" placeholder="Search..." wire:model.live="desig_name">
-                                   
-                                             <ul class="select2-results">
-                                                  @foreach($designation_options as $option)
-                                                  <li 
-                                                       class = "select2-option" 
-                                                       wire:key ="user-{{ $option->id }}"
-                                                       x-on:click = "$wire.call('select_designation', {{$option->id}}, '{{$option->name}}')"
+                                    <div class="select2 select2-container" x-data="{open:false}">
+                                             <div class="input-group mb-3">
+                                                  <input 
+                                                       type = "text" 
+                                                       class = "form-control select2-selection no-focus" 
+                                                       value =" {{$designation_name??''}}"
+                                                       x-on:focus = "open=true"
+                                                       readonly
                                                   >
-                                                       {{ $option->name }}
-                                                  </li>
-                                                  @endforeach
-                                             </ul>
-                                        </div>
-                                        @endif
-                                        </div>
-
-                                        @if( $display_error ) 
-                                          @error('designation.id') <small class="text-danger">{{ $message }}  </small> @enderror 
-                                        @endif
+                                                  <div class="input-group-append" style="cursor:pointer;">
+                                                       <span class="input-group-text" 
+                                                             x-on:click="
+                                                                $wire.set('designation_name', null);
+                                                                $wire.set('designation_id',null);
+                                                                open=false;
+                                                             "
+                                                       >&times;</span>
+                                                  </div>
+                                             </div>
+                                             <div
+                                                  class="select2-dropdown" 
+                                                  x-show="open"
+                                                  x-transition:enter.duration.500ms
+                                                  x-transition:leave.duration.400ms 
+                                             >  <div>
+                                                  <div class="select2-search">
+                                                       <div class="input-group w-100 ">
+                                                                 <input type="text" 
+                                                                        class="form-control no-focus border-right-0" placeholder="Search..." 
+                                                                        wire:model.live.debounce.250ms="designation_text" 
+                                                                 >
+                                                                 <div class="input-group-append" 
+                                                                      @click="open=false" 
+                                                                      style="cursor:pointer;">
+                                                                      <span class="input-group-text bg-transparent border-left-0">&times;</span>
+                                                                 </div>
+                                                       </div>
+                                                  </div>
+                                                  <ul class="select2-results">
+                                                       @foreach($designation_options as $option)
+                                                       <li 
+                                                            class = "select2-option" 
+                                                            wire:key ="dsg-{{ $option->id }}"
+                                                            @click = "
+                                                                $wire.set('designation_name', '{{$option->name}}');
+                                                                $wire.set('designation_id', '{{$option->id}}');
+                                                                open = false;
+                                                            "
+                                                       >
+                                                            {{ $option->name }}
+                                                       </li>
+                                                       @endforeach
+                                                  </ul>
+                                             </div>
+                                       </div>
+                                        @error('designation_id')<small class="text-danger" x-show="!loading">{{ $message }}</small>@enderror
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>Date Of Joining</label>
-                                    <input type="date" class="form-control" placeholder="" wire:model="doj">
-                                    @if( $display_error )  
-                                       @error('doj') <small class="text-danger">{{ $message }}  </small> @enderror 
-                                    @endif
+                                    <input type="date" class="form-control" placeholder="" wire:model="doj"> 
+                                    @error('doj') <small class="text-danger">{{ $message }}  </small> @enderror
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>Salary</label>
                                     <input type="number" class="form-control" placeholder="Examples - 10000,20000" wire:model="salary">
-                                   
-                                       @error('salary') 
-                                       <small 
-                                          class="text-danger"
-                                          wr:loading.hide="inline-block {{$delay}}"
-                                          wr:target="update"
-                                          style="display:none"
-                                       >{{ $message }}  </small> @enderror
+                                    @error('salary')<small>{{ $message }}</small> @enderror
                                 </div>
                                 <div class="form-group mb-3">
                                       <label class="mb-2">Photo</label>
@@ -109,68 +132,25 @@
                                              <div class="form-text">Max size 2MB. Accepted: JPG, PNG, WebP</div>
                                         </div>
                                    </div>
-                                   @if( $display_error ) 
-                                     @error('photo') <small class="text-danger">{{ $message }}  </small> @enderror 
-                                   @endif
+                                   @error('photo') <small class="text-danger">{{ $message }}  </small> @enderror 
+                                   
                                 </div>
                                 
                          </form>
                     </div>
                     <div class="card-footer text-end">
                          <a wire:navigate class="btn btn-secondary" href="{{route('employees.index')}}">Close</a>
-                         <button  class="btn btn-success" wire:click="update"
-                            wr:loading.attr="disabled {{$delay}}"
-                            wr:target="update"
-                         >
-                         <span 
-                            class="spinner-border spinner-border-sm"
-                            role="status" aria-hidden="true"
-                            wr:loading.display="inline-block {{$delay}}"
-                            wr:target="update"
-                            style="display:none"
-                         >
-                         </span>
-                         <span
-                            wr:loading.hide="inline {{$delay}}"
-                            wr:target="update"
-                         >
-                            Update
-                         </span> 
-                               
-                         </button>
+                         <button  
+                           class="btn btn-success" 
+                           @click="
+                              loading = true;
+                              $wire.call('update');
+                           " 
+                           x-text="!loading? 'Update':'Updating..'"
+                           :disabled="loading"
+                           ></button>
                     </div>
                 </div>
            </div>
       </div>
 </div>
-
-@script
-<script>
-     $wire.on('start-update',function( event ){
-          $wire.set('display_error', false);
-          $wire.set('loading',true);
-          $wire.call('update');
-     });
-
-     $wire.on('on-update',function( event ){
-          setTimeout( function(){ 
-                    Swal.fire({
-                         icon:  event.success? 'success': 'error',
-                         title: event.message,
-                         toast: true,
-                         timer: 3000,
-                         position: 'top-end',
-                         showConfirmButton: false,
-                         width:'400px',
-                         didClose: () => {
-                              if( event.success ) {
-                                  // Livewire.navigate("{{route('employees.index')}}");
-                              }
-                         }
-                    });
-                    $wire.set('loading',false);
-                    $wire.set('display_error', !event.success );
-          },3000);
-     });
-</script>
-@endscript

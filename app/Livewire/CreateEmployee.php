@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
+use \App\Traits\Notifier;
 use App\Models\Designation;
 use App\Models\Employee;
 
@@ -17,14 +18,7 @@ class CreateEmployee extends Component
 {
 
     use WithFileUploads;
-
-    public bool   $loading = false;
-
-    public bool $display_error = false;
-
-    public string $desig_name = '';
-    
-    public string $open_desig;
+    use Notifier;
 
     public string $name ;
 
@@ -32,7 +26,11 @@ class CreateEmployee extends Component
 
     public string $phone;
 
-    public array $designation =[];
+    public string $designation_name;
+
+    public string $designation_id;
+
+    public string $designation_text = '';
 
     public string $doj;
 
@@ -55,7 +53,7 @@ class CreateEmployee extends Component
               'required',
               'digits:10',
           ],
-          'designation.id'=> [
+          'designation_id'=> [
              'required',
               Rule::exists('designations','id')
           ],
@@ -81,8 +79,8 @@ class CreateEmployee extends Component
     public function messages()
     {
         return [
-            'designation.id.required' => 'The designation field is required.',
-            'designation.id.exists'   => 'The designation field is invalid.',
+            'designation_id.required' => 'The designation field is required.',
+            'designation_id.exists'   => 'The designation field is invalid.',
         ];
     }
 
@@ -113,28 +111,16 @@ class CreateEmployee extends Component
             $employee->photo  = json_encode($fileinfo);
             $employee->designation_id = $this->pull('designation')['id'];      
             $employee->save();
-            $this->dispatch('on-save', success: true,  message: 'Employee saved successfully.');
+            $this->notify( true, 'Employee saved successfully.');
         }catch( ValidationException $e ){
-            $this->dispatch('on-save', success: false, message: 'Validation failure occurred.');
+            $this->notify(false, 'Validation failure occurred.');
             throw $e;
         }
     }
 
-    public function select_designation( $id, $name)
-    {
-        $this->designation = compact('id','name');
-        $this->open_desig  = false;
-    }
-
-    public function clear_designation()
-    {
-        $this->designation = [];
-        $this->open_desig  = false;
-    }
-
     public function render()
     {
-        $designations = Designation::where('name','like','%'.$this->desig_name.'%')
+        $designations = Designation::where('name','like','%'.$this->designation_text.'%')
                          ->orderBy('name','asc')
                          ->limit(10)
                          ->get();

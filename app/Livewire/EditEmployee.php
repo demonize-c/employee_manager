@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
+use \App\Traits\Notifier;
 use App\Models\Designation;
 use App\Models\Employee;
 
@@ -19,14 +20,9 @@ class EditEmployee extends Component
 
     use WithFileUploads;
 
+    use Notifier;
 
-    public bool $loading  = false;
-
-    public bool $display_error = false;
-
-    public bool $open_desig = false;
-
-    public string $desig_name = '';
+   
 
     public Employee $employee;
 
@@ -36,7 +32,11 @@ class EditEmployee extends Component
 
     public string $phone;
 
-    public array $designation =[];
+    public string $designation_name;
+
+    public string $designation_id;
+
+    public string $designation_text = '';
 
     public string $doj;
 
@@ -55,23 +55,8 @@ class EditEmployee extends Component
         $this->email  = $employee->email;
         $this->doj    = $employee->doj;
         $this->salary = $employee->salary;
-
-        $this->designation = [
-            'id'   => $employee->designation->id,
-            'name' => $employee->designation->name
-        ];
-    }
-
-    public function select_designation( $id, $name)
-    {
-        $this->designation = compact('id','name');
-        $this->open_desig  = false;
-    }
-
-    public function clear_designation()
-    {
-        $this->designation = [];
-        $this->open_desig  = false;
+        $this->designation_id   = $employee->designation->id;
+        $this->designation_name = $employee->designation->name;
     }
 
     public function rules()
@@ -89,7 +74,7 @@ class EditEmployee extends Component
               'required',
               'digits:10'
           ],
-          'designation.id'=> [
+          'designation_id'=> [
              'required',
               Rule::exists('designations','id')
           ],
@@ -110,10 +95,6 @@ class EditEmployee extends Component
           ]
       ];
     }
-
-    // public function ready_reset(){
-    //     $this->ready = false;
-    // }
 
     public function update() 
     {
@@ -154,24 +135,24 @@ class EditEmployee extends Component
             $employee->doj    = $this->doj; 
             $employee->salary = $this->salary;
             
-            $employee->designation_id = $this->designation['id']?? null;
+            $employee->designation_id = $this->designation_id;
             
             if($fileinfo){
               $employee->photo  = json_encode($fileinfo);
             }
             
             $employee->save();
-            $this->dispatch('on-update', success: true, message: 'Employee updated successfully.');
+            $this->notify( true, 'Employee updated successfully.');
 
          }catch( ValidationException $e ){
-            $this->dispatch('on-update', success: false, message: 'Validation failure occurred.');
+            $this->notify( false, 'Validation failure occurred.');
             throw $e;
          }
     }
 
     public function render()
     {
-        $designations = Designation::where('name','like','%'.$this->desig_name.'%')
+        $designations = Designation::where('name','like','%'.$this->designation_text.'%')
                          ->orderBy('name','asc')
                          ->limit(10)
                          ->get();
