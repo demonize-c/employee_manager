@@ -10,6 +10,7 @@ use App\Livewire\EditDesignation;
 use App\Livewire\Employees;
 use App\Livewire\CreateEmployee;
 use App\Livewire\EditEmployee;
+use App\Livewire\CreateAttendance;
 
 //Route::get('/', CreatePost::class);
 
@@ -22,3 +23,5 @@ Route::get('/designations/{designation}/edit',EditDesignation::class)->name('des
 Route::get('/employees',Employees::class)->name('employees.index');
 Route::get('/employees/create',CreateEmployee::class)->name('employees.create');
 Route::get('/employees/{employee}/edit',EditEmployee::class)->name('employees.edit');
+
+Route::get('/attendances/create',CreateAttendance::class)->name('attendances.create');

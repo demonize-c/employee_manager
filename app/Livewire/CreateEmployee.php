@@ -109,7 +109,7 @@ class CreateEmployee extends Component
             $employee->doj    = $this->doj;
             $employee->salary = $this->salary;
             $employee->photo  = json_encode($fileinfo);
-            $employee->designation_id = $this->pull('designation')['id'];      
+            $employee->designation_id = $this->designation_id;      
             $employee->save();
             $this->notify( true, 'Employee saved successfully.');
         }catch( ValidationException $e ){

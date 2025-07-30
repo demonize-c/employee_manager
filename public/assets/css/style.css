@@ -4,7 +4,7 @@ body {
     margin: 0;
     overflow: hidden;
     display: flex;
-  }
+}
   
 .wrapper {
     display: flex;
@@ -199,7 +199,7 @@ td .image-preview-wrapper{
 }
 
 @media only screen and (max-width: 800px) {
-    table, 
+    /* table, 
     thead, 
     tbody, 
     th, 
@@ -247,6 +247,6 @@ td .image-preview-wrapper{
 
     tr > td:last-child{
         border-bottom: none !important;
-    }
+    } */
 }
   

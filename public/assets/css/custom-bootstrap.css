@@ -118,3 +118,25 @@
 .no-focus:focus {
     box-shadow: none !important;
 }
+
+.bg-light-gray     { background-color: #f5f5f5 !important; }
+.bg-ivory          { background-color: #fffff0 !important; }
+.bg-honeydew       { background-color: #f0fff0 !important; }
+.bg-lavender       { background-color: #f5f5ff !important; }
+.bg-light-cyan     { background-color: #e0ffff !important; }
+.bg-light-yellow   { background-color: #ffffe0 !important; }
+.bg-mint-cream     { background-color: #f5fffa !important; }
+.bg-alice-blue     { background-color: #f0f8ff !important; }
+.bg-seashell       { background-color: #fff5ee !important; }
+.bg-beige          { background-color: #f5f5dc !important; }
+
+.bg-light-gray2     { background-color: #e0e0e0 !important; }
+.bg-ivory2          { background-color: #fdf6e3 !important; }
+.bg-honeydew2       { background-color: #d0f0d0 !important; }
+.bg-lavender2       { background-color: #e6e6fa !important; }
+.bg-light-cyan2     { background-color: #b2ffff !important; }
+.bg-light-yellow2   { background-color: #ffffcc !important; }
+.bg-mint-cream2     { background-color: #d6fff0 !important; }
+.bg-alice-blue2     { background-color: #cceeff !important; }
+.bg-seashell2       { background-color: #ffe5d9 !important; }
+.bg-beige2          { background-color: #f0e68c !important; }

@@ -14,5 +14,5 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/loadingio/loading.css@v2.0.0/dist/loading.min.css">
 
-
+<link rel="stylesheet" href="{{asset('libs/jquery-timepicker/jquery.timepicker.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/style.css')}}" data-navigate-once>
