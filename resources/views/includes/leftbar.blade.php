@@ -39,7 +39,7 @@
                 <ul class="nav flex-column ms-3">
                     <li class="nav-item">
                         <a  wire:navigate class="nav-link" href="{{route('attendances.create')}}">
-                            <i class="fa-solid fa-users me-2 {{Route::is('attendances.*')?'text-primary':''}}"></i>
+                            <i class="fa-solid fa-calendar me-2 {{Route::is('attendances.*')?'text-primary':''}}"></i>
                             Attendences
                         </a>
                     </li>

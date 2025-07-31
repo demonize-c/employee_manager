@@ -9,7 +9,7 @@
         });
     "
     >
-    <input wire:ignore type="time" class="form-control attendance-input timepicker no-focus" @change="loading=true; time=$event.target.value; $wire.call('save')">
+    <input wire:ignore type="time" class="form-control attendance-input timepicker no-focus opacity-0" @change="loading=true; time=$event.target.value; $wire.call('save')">
     <span class="time-display" x-text="time? convertTo12Hour(time): '__:__ __'"></span>
     <i wire:ignore class="fas fa-pen edit-btn open-picker" :class="{'active':!loading}"></i>
 </td>

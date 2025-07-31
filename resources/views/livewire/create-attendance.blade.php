@@ -53,6 +53,20 @@
          max-width:calc(100vw - 20px) !important;
    }
 }
+@keyframes zoomIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.zoomIn {
+    animation: zoomIn 0.15s ease forwards;
+}
 </style>
 @endsection
 
@@ -95,8 +109,8 @@
     </div> -->
   </div>
   <div class="row justify-content-center">
-    <div class="table-responsive">
-          <table class="table table-bordered text-nowrap">
+    <div class="table-responsive zoomIn" wire:loading.class.remove="zoomIn" wire:target="gotoPage, nextPage, previousPage, updateAttendanceChart">
+          <table class="table table-bordered text-nowrap compact">
               <thead>
                   <tr>
                       <th class="employee-col">Employee</th>

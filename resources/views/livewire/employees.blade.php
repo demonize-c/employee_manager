@@ -21,42 +21,39 @@
 
 <div class="container">
       <div class="row justify-content-center">
-           <div class="col-md-10">
+           <div class="col-lg-10">
                <form class="row  justify-content-between" id="searchForm">
-                    <div class="col-md-3 mb-2 mb-md-0">
+                    <div class="col-md-4 mb-2 mb-md-0">
                          <input 
                             type="text"
-                            class="form-control" 
+                            class="form-control form-control-sm" 
                             id="searchName"  
                             placeholder="Search by Name"   
                             wire:model="search_name" 
                             wire:keydown.enter ="update_search"
                         >
                     </div>
-                    <div class="col-md-3 mb-2 mb-md-0">
+                    <div class="col-md-4 mb-2 mb-md-0">
                           <input 
                               type="text" 
-                              class="form-control"
+                              class="form-control form-control-sm"
                               id="searchPhone" 
                               placeholder="Search by Phone" 
                               wire:model  ="search_phone" 
                               wire:keydown.enter ="update_search"
                             >
                     </div>
-                    <div class="form-group col-md-3 mb-2 mb-md-0">
+                    <div class="form-group col-md-4 mb-2 mb-md-0">
                         <livewire:designation-select-input :dsg_name="$search_dsg_name" :dsg_id="$search_dsg_id"/>
                     </div>
                 </form>
            </div>
-           <div class="col-md-10 mt-4">
-               <div class="card shadow-sm">
-                   <div class="card-header">
-                       <div class="row">
-                       
-                       </div>
+           <div class="col-lg-10 mt-2">
+               <div class="card shadow-none-sm shadow-sm">
+                   <div class="card-header border-bottom-0 bg-none-sm">
                        <div class="row">
                            <div class="col">
-                                <h4>Employees</h2>
+                                <h5>Employees</h5>
                            </div>
                            <div class="col text-end">
                            <div class="btn-group btn-group-sm me-2" role="group">
@@ -86,13 +83,13 @@
                            </div>
                        </div>
                    </div>
-                   <div class="card-body" >
+                   <div class="card-body px-0 px-md-4" >
                          <div 
-                            class="table-wrapper animate__animated animate__zoomIn"
-                            wire:loading.class.remove="animate__zoomIn"
-                            wire:target="gotoPage, nextPage, update_search, select_designation, clear_designation, deleteConfirmed"
+                            class="table-wrapper zoomIn"
+                            wire:loading.class.remove="zoomIn"
+                            wire:target="gotoPage, nextPage, previousPage, update_search, select_designation, clear_designation, deleteConfirmed"
                          >    
-                            <table class="table">
+                            <table class="table table-compact mobile-stacked-table">
                                 <thead>
                                     <tr>
                                     <th class="text-start">#</th>
@@ -108,9 +105,12 @@
                                     @foreach($employees as $employee)
                                         <tr>
                                         <td class="text-start" style="" data-title="Photo">
-                                            <div class="image-preview-wrapper">
-                                                <img class="preview-img" src="{{ $employee->photoUrl()}}" alt="">
-                                            </div>
+                                             <div class="image-aligner">
+                                                <div class="image-preview-wrapper">
+                                                    <img class="preview-img" src="{{ $employee->photoUrl()}}" alt="">
+                                                </div>
+                                             </div>
+
                                         </td>
                                             <td class="text-start" data-title="Name">
                                             
@@ -130,7 +130,7 @@
                                         </tr>
                                     @endforeach
                                   @else
-                                      <tr><td class="py-4"colspan="6">
+                                       <tr><td class="py-4"colspan="6">
                                             <h4 class="text-center text-muted" >No Data</h4> 
                                        </td></tr>
                                   @endif

@@ -20,12 +20,12 @@
 
 <div class="container">
       <div class="row justify-content-center">
-           <div class="col-md-8 mt-4">
-                <div class="row  justify-content-start mt-2" id="searchForm">
-                    <div class="col-md-3">
+           <div class="col-md-8">
+                <div class="row justify-content-start" id="searchForm">
+                    <div class="col-md-5 mb-2">
                          <input 
                             type="text"
-                            class="form-control" 
+                            class="form-control form-control-sm" 
                             id="searchName"  
                             placeholder ="Search by Name"   
                             wire:model ="search_name" 
@@ -34,10 +34,10 @@
                     </div>
             </div>
            </div>
-           <div class="col-md-8 mt-4">
+           <div class="col-md-8 mt-2">
                <div class="card shadow-sm">
                    <div 
-                         class="card-header" 
+                         class="card-header bg-black-50 border-bottom-0" 
                          x-init="
                          $wire.on('notify', ({success, message}) => {
                                     notify({
@@ -50,7 +50,7 @@
                     >
                        <div class="row">
                            <div class="col">
-                                <h4>Designatons</h2>
+                                <h5>Designatons</h5>
                            </div>
                            <div class="col text-end">
                                   <a class="btn btn-sm btn-primary" href="{{route('designations.create')}}"><i class="fa-solid fa-plus "></i> Add</a>
@@ -63,7 +63,7 @@
                               wire:target="previousPage, nextPage, gotoPage, updateSearch, delete"
                         > 
                         <div>
-                        <table class="table">
+                        <table class="table table-compact">
                             <thead>
                                 <tr>
                                    <th class="text-start">Name</th>

@@ -166,7 +166,7 @@ class Employees extends Component
             $employees->where('designation_id',$this->search_dsg_id );
         }
 
-        $employees = $employees->orderBy('id','desc')->paginate(5);
+        $employees = $employees->orderBy('id','desc')->paginate(10);
         
         return view('livewire.employees',[
             'employees' => $employees,
