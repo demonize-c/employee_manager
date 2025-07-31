@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\Attributes\Title;
 use Livewire\WithFileUploads;
 
 use \App\Traits\Notifier;
@@ -14,6 +15,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use App\Helpers\SupabaseStorageHelper;
 
+#[Title('Create Employee')] 
 class CreateEmployee extends Component
 {
 

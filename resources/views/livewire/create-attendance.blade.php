@@ -1,51 +1,15 @@
 @section('css')
 <style>
-.attendance-input {
-    width:  0px;
-    height: 0px;
-    padding:0px;
-}
-.employee-col {
-    /* min-width: 140px; */
-    font-size: 0.8rem;
-    background-color: #f9f9f9 !important;
-    position: sticky;
-    left:-5px;
-    z-index: 2;
-}
-.date-header {
-    font-size: 0.75rem;
-}
-.readonly-cell {
-    font-size: 0.75rem;
-    padding: 1rem 2rem!important;
-    position: relative;
-}
-.editonly-cell {
-    font-size: 0.75rem;
-    padding: 1rem 1rem!important;
-    position: relative;
-}
-.edit-btn{
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    font-size: 0.65rem;
-    pointer-events:none;
-    cursor: none;
-    color:#e0e0e0;
-}
-.edit-btn.active{
-  pointer-events:auto;
-  cursor: pointer;
-  color: #0d6efd;
+.zoomIn {
+    animation: zoomIn 0.15s ease forwards;
 }
 
 .table-responsive{
-  max-width:calc(100vw - 260px);
-  overflow-x:scroll;
-  padding:0 !important;
+    max-width:calc(100vw - 280px);
+    overflow-x:scroll;
+    padding:0 !important;
 }
+
 
 @media only screen and (max-width: 980px) {
    
@@ -64,21 +28,19 @@
     }
 }
 
-.zoomIn {
-    animation: zoomIn 0.15s ease forwards;
-}
+
 </style>
 @endsection
 
-<div class="container-fluid mt-4">
+<div class="container-fluid content-area mt-4">
   <!-- Filter Inputs -->
   <div class="row mb-3">
-    <div class="col-md-3 col-6">
-      <label for="yearInput" class="form-label">Year</label>
+    <div class="col-md-3 mb-2 mb-md-0">
+      <!-- <label for="yearInput" class="form-label">Year</label> -->
       <input type="text" id="yearInput" class="form-control form-control-sm" placeholder="e.g. 2025" min="2000" max="2100" wire:model.live="year" wire:keydown.enter="updateAttendanceChart">
     </div>
-    <div class="col-md-3 col-6">
-      <label for="monthInput" class="form-label">Month</label>
+    <div class="col-md-3 mb-2 mb-md-0">
+      <!-- <label for="monthInput" class="form-label">Month</label> -->
       <select id="monthInput" class="form-select form-select-sm" wire:model="month" wire:change="updateAttendanceChart">
         <option value="">Select Month</option>
         <option value="1">January</option>
@@ -95,8 +57,8 @@
         <option value="12">December</option>
       </select>
     </div>
-    <div class="col-md-3 col-6">
-      <label for="weekInput" class="form-label">Week</label>
+    <div class="col-md-3  mb-2 mb-md-0">
+      <!-- <label for="weekInput" class="form-label">Week</label> -->
       <select id="weekInput" class="form-select form-select-sm" wire:model="week" wire:change="updateAttendanceChart">
         <option value="">Select Week</option>
         @for($i=1; $i <= $total_weeks; $i++)
@@ -110,7 +72,7 @@
   </div>
   <div class="row justify-content-center">
     <div class="table-responsive zoomIn" wire:loading.class.remove="zoomIn" wire:target="gotoPage, nextPage, previousPage, updateAttendanceChart">
-          <table class="table table-bordered text-nowrap compact">
+          <table id="attendance_table" class="table table-bordered text-nowrap mobile-stacked-table">
               <thead>
                   <tr>
                       <th class="employee-col">Employee</th>
@@ -131,8 +93,9 @@
                       <tr>
                           <td class="employee-col">{{ $employee->name }}</td>
                           @foreach($periods as $date)
-                            <livewire:attendance-input  wire:key="attendance-{{ $date }}-{{ $employee->id }}-check-in" :date="$date" :employee_id="$employee->id" :type="'check_out'">
-                            <livewire:attendance-input  wire:key="attendance-{{ $date }}-{{ $employee->id }}-check-out"  :date="$date" :employee_id="$employee->id" :type="'check_in'">
+                            <td data-title="In at {{date('d, M', strtotime($date))}}"><livewire:attendance-input  wire:key="attendance-{{ $date }}-{{ $employee->id }}-check-in" :date="$date" :employee_id="$employee->id" :type="'check_out'"></td>
+                            
+                            <td data-title="Out at {{date('d, M', strtotime($date))}}"><livewire:attendance-input  wire:key="attendance-{{ $date }}-{{ $employee->id }}-check-out"  :date="$date" :employee_id="$employee->id" :type="'check_in'"></td>
                           @endforeach
                       </tr>
                   @endforeach

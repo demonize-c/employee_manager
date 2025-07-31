@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\Attributes\Title;
 
 use App\Traits\Notifier;
 use App\Models\Designation;
@@ -10,6 +11,7 @@ use App\Models\Designation;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
+#[Title('Edit Designation')] 
 class EditDesignation extends Component
 {
 

@@ -3,13 +3,16 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\Attributes\Title;
 use Livewire\WithPagination;
 
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 
 use App\Models\Employee;
+use Livewire\Attributes\Validate;
 
+#[Title('Attendances')] 
 class CreateAttendance extends Component
 {
 
@@ -59,6 +62,10 @@ class CreateAttendance extends Component
         $start_of_week =  $start_of_month->copy()->startOfWeek()->subDay();
         $end_of_week   =  $start_of_month->copy()->endOfWeek()->subDay();
 
+        if( $this->week > $this->total_weeks ) {
+            $this->week = $this->total_weeks;
+        }
+
         for ($i=0; $i < ($this->week - 1); $i++) { 
             $start_of_week->addWeek();
             $end_of_week->addWeek();
@@ -81,10 +88,6 @@ class CreateAttendance extends Component
 
     }
 
-    // public function getAttendanceData(){
-    //      $this->attendances[][]
-    // }
-
 
     public function updatedPage($page)
     {
@@ -94,7 +97,7 @@ class CreateAttendance extends Component
 
     public function render()
     {
-        $employees = Employee::paginate(2);
+        $employees = Employee::orderBy('id','desc')->paginate(10);
         return view('livewire.create-attendance',compact('employees'))->extends('layouts.app');
     }
 }

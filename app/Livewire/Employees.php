@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\Attributes\Title;
 use Livewire\WithPagination;
 
 use App\Models\Designation;
@@ -12,6 +13,7 @@ use App\Models\Employee;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
 
+#[Title('Employees')] 
 class Employees extends Component
 {
 

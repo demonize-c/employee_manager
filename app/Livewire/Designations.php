@@ -3,12 +3,15 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\Attributes\Title;
 use Livewire\WithPagination;
 
 use App\Traits\Notifier;
 use App\Models\Designation;
 use App\Models\Employee;
 
+
+#[Title('Designations')] 
 class Designations extends Component
 {
 

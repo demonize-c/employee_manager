@@ -3,10 +3,13 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\Attributes\Title;
+
 use App\Models\Designation;
 use App\Traits\Notifier;
 use Illuminate\Validation\ValidationException;
 
+#[Title('Create Designation')] 
 class CreateDesignation extends Component
 {
 

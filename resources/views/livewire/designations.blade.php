@@ -53,7 +53,7 @@
                                 <h5>Designatons</h5>
                            </div>
                            <div class="col text-end">
-                                  <a class="btn btn-sm btn-primary" href="{{route('designations.create')}}"><i class="fa-solid fa-plus "></i> Add</a>
+                                  <a wire:navigate class="btn btn-sm btn-primary" href="{{route('designations.create')}}"><i class="fa-solid fa-plus "></i> Add</a>
                            </div>
                        </div>
                    </div>

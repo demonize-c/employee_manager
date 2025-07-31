@@ -26,23 +26,24 @@ class AttendanceInput extends Component
         $this->date = $date;
         $this->employee_id = $employee_id;
         $this->type = $type;
+    }
 
+    public function load_data() {
 
-        $attendance = Attendance::where('date', $date)->where('employee_id', $employee_id)->first();
+        $attendance = Attendance::where('date', $this->date)->where('employee_id', $this->employee_id)->first();
         if( $attendance ){
-            if( $attendance->{ $type } ) {
+            if( $attendance->{ $this->type } ) {
                 $this->time = $attendance->{ $this->type };
                 $this->synced = true;
             }
         }
     }
-
     
 
     public function save() {
           
           try {
-
+             
             $attendance = Attendance::where('date', $this->date)
                             ->where('employee_id', $this->employee_id)
                             ->first();

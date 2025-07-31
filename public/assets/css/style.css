@@ -24,16 +24,10 @@ body {
     overflow-y: auto;
 }
 
-.container{
+.container, .content-area{
     padding-top:30px !important;
     padding-bottom:30px !important;
 }
-
-/* .content-area{
-    padding-top:30px !important;
-    padding-bottom:30px !important;
-} */
-
 
 .sidebar {
     width: 240px;
@@ -187,6 +181,47 @@ body {
    width:70px;
 }
 
+.zero-dimension {
+    width:0px !important;
+    height:0px !important;
+}
+
+
+#attendance_table thead tr th {
+    font-size: 0.95rem;
+    padding: 1rem 2rem !important;
+}
+
+#attendance_table tbody tr td{
+    padding:0 !important;
+    font-size: 0.75rem;
+    position: relative; 
+}
+
+#attendance_table tbody tr td:first-child{
+    font-size: 0.8rem;
+    background-color: #f9f9f9 !important;
+    position: sticky;
+    left:-1px;
+    z-index: 2;
+}
+
+#attendance_table td .edit-btn{
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 0.65rem;
+    pointer-events:none;
+    cursor: none;
+    color:#e0e0e0;
+}
+
+#attendance_table td .edit-btn.active{
+  pointer-events:auto;
+  cursor: pointer;
+  color: #0d6efd;
+}
+
 @media (max-width: 992px) {
     .sidebar {
         position: fixed;
@@ -199,6 +234,11 @@ body {
 
 @media only screen and (max-width: 768px) {
     
+    .container, .content-area{
+        padding-top:15px !important;
+        padding-bottom:100px !important;
+    }
+
     .mobile-stacked-table {
         width:100% !important;
         padding:0px 20px;
@@ -283,12 +323,26 @@ body {
     .bg-none-sm{
         background:none !important;
      }
-}
 
-@media (max-width: 768px) {
-    .container{
-        padding-top:15px !important;
-        padding-bottom:100px !important;
+     #attendance_table td{
+        padding-top:0px !important;
+        padding-bottom:0px !important;
+    }
+
+    #attendance_table tr td:first-child
+   
+    {
+        position: static !important;
+        padding-top:20px !important;
+        padding-bottom:20px !important;
+        text-align:center !important;
+        font-size:1rem !important;
+    }
+    #attendance_table tr td:last-child{
+        padding-bottom:15px !important;
+    }
+    #attendance_table td .edit-btn{
+        top:50% !important;
+        right:20px;
     }
 }
-  
