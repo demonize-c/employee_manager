@@ -9,10 +9,10 @@
     --bs-dark: #0f172a;
 }
 :root {
-    --bs-primary:   #fb923c; /* Royal Blue */
+    --bs-primary:   #619b8a; /* Royal Blue */
     --bs-secondary: #6b21a8; /* Royal Purple */
-    --bs-success:   #228b22; /* Emerald Green */
-    --bs-danger:    #b22222; /* Ruby Red */
+    --bs-success:   #10b981; /* Emerald Green */
+    --bs-danger:    #fd5c63; /* Ruby Red */
     --bs-warning:   #d4af37; /* Royal Gold */
     --bs-info:      #4682b4; /* Steel Blue */
     --bs-light:     #f3f4f6; /* Light Gray (cool tone) */

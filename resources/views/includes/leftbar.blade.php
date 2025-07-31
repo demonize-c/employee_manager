@@ -11,7 +11,7 @@
            </li>
            @endif
             <li class="nav-item">
-            <a class="nav-link {{Route::is('designations.*') || Route::is('employees.*')?'active':''}}" data-bs-toggle="collapse" href="#menu1" role="button">
+            <a class="nav-link {{Route::is('designations.*') || Route::is('employees.*')?'active':''}}" data-bs-toggle="collapse" data-bs-target="#menu1" role="button" aria-expanded="false" aria-controls="menu">
                 <i class="fa-solid fa-user-tie me-2"></i>Employees
             </a>
             <div 
