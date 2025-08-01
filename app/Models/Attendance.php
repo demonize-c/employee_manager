@@ -11,7 +11,7 @@ use App\Models\Employee;
 class Attendance extends Model
 {
     //
-    use SoftDeletes; 
+    // use SoftDeletes; 
 
     protected $fillable = [];
 

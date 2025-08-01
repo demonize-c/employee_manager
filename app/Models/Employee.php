@@ -11,7 +11,7 @@ use App\Helpers\SupabaseStorageHelper;
 class Employee extends Model
 {
     //
-    use SoftDeletes;
+    // use SoftDeletes;
 
     protected $fillable = [];
 
@@ -33,5 +33,10 @@ class Employee extends Model
         }
 
         return SupabaseStorageHelper::publicUrl($photoinfo['Key']);
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
     }
 }

@@ -122,6 +122,7 @@ class Employees extends Component
           if( !$employee ) {
               throw new \Exception("Employee not found.");
           }
+          $employee->attendances()->delete();
           $employee->delete();
           $this->dispatch('on-delete', success: true, message: 'Employee deleted successfully.');
 

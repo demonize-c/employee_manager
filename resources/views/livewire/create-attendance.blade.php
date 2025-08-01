@@ -116,13 +116,3 @@
           </nav>
     </div>
 </div>
-
-@script
-
-<script>
-
-  __cul.add($wire, ()=> { initializeTimePicker(); });
-
-</script>
-
-@endscript

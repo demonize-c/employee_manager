@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Designation extends Model
 {
     //
-    use SoftDeletes;
+    // use SoftDeletes;
 
     protected $fillable = [];
 }
