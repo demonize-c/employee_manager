@@ -4,19 +4,19 @@ return [
 
      'employees' => [
 
-            'max' => 1,
+            'max' => 20,
 
      ],
 
      'designations' => [
 
-            'max' => 1,
+            'max' => 20,
 
      ],
 
      'attendances' => [
 
-            'max' => 1,
+            'max' => 100,
 
      ],
 ];
