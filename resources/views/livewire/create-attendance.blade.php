@@ -89,6 +89,7 @@
                   </tr>
               </thead>
               <tbody>
+                @if($employees->count() !== 0)
                   @foreach($employees as $employee)
                       <tr>
                           <td class="employee-col">{{ $employee->name }}</td>
@@ -99,6 +100,12 @@
                           @endforeach
                       </tr>
                   @endforeach
+                @else
+                    <tr class="no-data"><td class="py-4" colspan="14">
+                        <h4 class="text-center text-muted" >No Data</h4> 
+                    </td></tr>
+                @endif
+                
               </tbody>
           </table>
       </div>

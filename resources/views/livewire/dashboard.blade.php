@@ -46,7 +46,11 @@
         <div class="d-flex align-items-center">
             <i class="fa fa-calendar-check me-3"></i>
             <div>
-            <h5 class="mb-0">{{round(($total_attendances/ $total_employees) * 100, 2)}}% Attendance</h5>
+            <h5 class="mb-0">{{
+                $total_employees!==0?
+                round(($total_attendances/ $total_employees) * 100, 2):
+                0
+            }}% Attendance</h5>
             <small class="text-muted">Today’s attendance rate</small>
             </div>
         </div>

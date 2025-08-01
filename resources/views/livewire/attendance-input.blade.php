@@ -3,9 +3,12 @@
     x-data="{open:false,time: @entangle('time'),synced: @entangle('synced'), loading:false}" 
     x-init="
         $wire.on('attendance.{{$date}}.{{$employee_id}}', function({ success, message }) {
-            if( success ) {
-              setTimeout(function() { loading=false; }, 1000)
-            }
+              setTimeout(() =>  {
+                    loading = false;
+                    if( !success ) {
+                        notify({ type: ('error'), message });
+                    }
+            }, 2000);
         });
     "
     wire:init="load_data"

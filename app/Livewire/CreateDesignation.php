@@ -14,6 +14,7 @@ class CreateDesignation extends Component
 {
 
     use Notifier;
+    use \App\Traits\DatabaseRestrictionHelper;
 
     public string $name = '';
 
@@ -29,6 +30,10 @@ class CreateDesignation extends Component
     {
         try {
             $this->validate();
+            
+            $this->can_save( Designation::class );
+            
+
             $designation   = new Designation;
             $designation->name = $this->name;  
             $designation->save();
@@ -37,6 +42,9 @@ class CreateDesignation extends Component
         
             $this->notify( false, 'Validation failure occurred.' );
             throw $e;
+       }catch (\Exception $e) {
+
+           $this->notify( false, 'Error: ' . $e->getMessage());
        }
     }
 

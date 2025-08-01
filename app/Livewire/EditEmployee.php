@@ -149,6 +149,8 @@ class EditEmployee extends Component
          }catch( ValidationException $e ){
             $this->notify( false, 'Validation failure occurred.');
             throw $e;
+         }catch(\Exception $e){
+            $this->notify(false, 'Failed to update employee.');
          }
     }
 

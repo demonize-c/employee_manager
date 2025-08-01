@@ -130,7 +130,7 @@
                                         </tr>
                                     @endforeach
                                   @else
-                                       <tr><td class="py-4"colspan="6">
+                                       <tr class="no-data"><td class="py-4" colspan="6">
                                             <h4 class="text-center text-muted" >No Data</h4> 
                                        </td></tr>
                                   @endif

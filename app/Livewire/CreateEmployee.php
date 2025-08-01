@@ -21,6 +21,7 @@ class CreateEmployee extends Component
 
     use WithFileUploads;
     use Notifier;
+    use \App\Traits\DatabaseRestrictionHelper;
 
     public string $name ;
 
@@ -97,7 +98,10 @@ class CreateEmployee extends Component
     {
         try{
             $this->validate();
-            $filename = null;
+
+            $this->can_save( Employee::class );          
+
+            $fileinfo = null;
 
             if( $this->photo ) {
                  $filename = Str::random(15).'-'.time().'.'.$this->photo->getClientOriginalExtension();
@@ -117,6 +121,8 @@ class CreateEmployee extends Component
         }catch( ValidationException $e ){
             $this->notify(false, 'Validation failure occurred.');
             throw $e;
+        }catch(\Exception $e){
+            $this->notify(false, 'Error: '.$e->getMessage());
         }
     }
 

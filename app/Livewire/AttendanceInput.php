@@ -9,6 +9,8 @@ class AttendanceInput extends Component
 {
 
 
+    use \App\Traits\DatabaseRestrictionHelper;
+    
     public ?Attendance $attendance;
 
     public string $date;
@@ -49,6 +51,9 @@ class AttendanceInput extends Component
                             ->first();
                             
             if( !$attendance ) {
+
+                $this->can_save( Attendance::class ); 
+
                 $attendance = new Attendance;
                 $attendance->date          = $this->date;
                 $attendance->employee_id   = $this->employee_id;
