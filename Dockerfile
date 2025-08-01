@@ -1,5 +1,11 @@
 FROM richarvey/nginx-php-fpm:3.1.6
 
+RUN sed -i \
+    -e "s/upload_max_filesize = .*/upload_max_filesize = 20M/" \
+    -e "s/post_max_size = .*/post_max_size = 25M/" \
+    /usr/local/etc/php/php.ini
+
+
 COPY . .
 
 # Image config
