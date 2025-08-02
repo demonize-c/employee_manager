@@ -11,7 +11,7 @@
     aria-expanded="false"
     >
         <img src="https://i.pravatar.cc/150?img=3" alt="profile" class="profile-img me-2" />
-        <span class="text-nowrap me-2">User Name</span>
+        <span class="text-nowrap me-2">{{auth()->user()->name}}</span>
         <livewire:logout/>
     </a>
     
