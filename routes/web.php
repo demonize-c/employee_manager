@@ -32,3 +32,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/attendances/create',CreateAttendance::class)->name('attendances.create');
 });
 
+Route::get('/wake',fn () => response()->json(['status' => 'ok']))->name('wake');
+
