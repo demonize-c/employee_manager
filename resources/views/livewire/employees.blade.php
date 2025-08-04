@@ -24,31 +24,103 @@
            <div class="col-lg-10">
                <form class="row  justify-content-between" id="searchForm">
                     <div class="col-md-4 mb-2 mb-md-0">
-                         <input 
-                            type="text"
-                            class="form-control form-control-sm" 
-                            id="searchName"  
-                            placeholder="Search by Name"   
-                            wire:model="search_name" 
-                            wire:keydown.enter ="update_search"
-                        >
+                       <div class="input-group">
+                                 
+                            <span class="input-group-text">
+                                 <i class="fa fa-search"></i>
+                            </span>
+                            <input 
+                                type="text"
+                                class="form-control text-sm" 
+                                id="searchName"  
+                                placeholder="Search by Name"   
+                                wire:model="search_name" 
+                                wire:keydown.enter ="updateSearch"
+                            >
+                      </div>
                     </div>
                     <div class="col-md-4 mb-2 mb-md-0">
-                          <input 
-                              type="text" 
-                              class="form-control form-control-sm"
-                              id="searchPhone" 
-                              placeholder="Search by Phone" 
-                              wire:model  ="search_phone" 
-                              wire:keydown.enter ="update_search"
-                            >
+                          <div class="input-group">
+                            <span class="input-group-text">
+                              <i class="fa-solid fa-phone"></i>
+                            </span>
+                            <input 
+                                type="text" 
+                                class="form-control text-sm"
+                                id="searchPhone" 
+                                placeholder="Search by Phone" 
+                                wire:model  ="search_phone" 
+                                wire:keydown.enter ="updateSearch"
+                                >
+                          </div>
                     </div>
                     <div class="form-group col-md-4 mb-2 mb-md-0">
-                        <livewire:designation-select-input :dsg_name="$search_dsg_name" :dsg_id="$search_dsg_id"/>
-                    </div>
+                        <div class="select2 select2-container" x-data="{open:false}" >
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">
+                                        <i class="fa-solid fa-user-tie"></i>
+                                    </span>
+                                    <input 
+                                        type = "text" 
+                                        class = "form-control select2-selection text-sm no-focus" 
+                                        @if( $search_dsg_name )
+                                          value = "{{$search_dsg_name}}"
+                                        @endif
+                                        @focus = "$refs.dropdown.classList.remove('d-none'); open=true;"
+                                        placeholder="Search by Designation"
+                                        readonly
+                                    >
+                                    <span class="input-group-text" 
+                                            x-on:click="
+                                                $wire.set('search_dsg_name', null);
+                                                $wire.set('search_dsg_id',null);
+                                                open=false;
+                                            "
+                                            style="cursor:pointer;" 
+                                    ><i class="fa-solid fa-trash-can"></i></span>
+                                 
+                                </div>
+                                <div
+                                    class  ="select2-dropdown d-none"
+                                    x-ref="dropdown"
+                                    x-show="open"
+                                    x-transition:enter.duration.500ms
+                                    x-transition:leave.duration.400ms 
+                                >  <div>
+                                    <div class="select2-search">
+                                        <div class="input-group input-group-sm w-100">
+                                                    <input type="text" 
+                                                        class="form-control no-focus border-right-0" placeholder="Search..." 
+                                                        wire:model.live.debounce.250ms="search_dsg_text" 
+                                                    >
+                                                    <div class="input-group-append" 
+                                                        @click="open=false" 
+                                                        style="cursor:pointer;">
+                                                        <span class="input-group-text bg-transparent border-left-0">&times;</span>
+                                                    </div>
+                                        </div>
+                                    </div>
+                                    <ul class="select2-results">
+                                        @foreach($designation_options as $option)
+                                        <li 
+                                            class = "select2-option" 
+                                            wire:key ="dsg-{{ $option->id }}"
+                                            @click = "
+                                                $wire.set('search_dsg_name', '{{$option->name}}');
+                                                $wire.set('search_dsg_id', '{{$option->id}}');
+                                                open = false;
+                                            "
+                                        >
+                                            {{ $option->name }}
+                                        </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                       </div>
                 </form>
            </div>
-           <div class="col-lg-10 mt-2">
+           <div class="col mt-2">
                <div class="card shadow-none-sm shadow-sm">
                    <div class="card-header border-bottom-0 bg-none-sm">
                        <div class="row">
@@ -60,7 +132,7 @@
                                 <button 
                                     type="button" 
                                     class="btn btn-outline-info {{$filter_applied?'text-danger':''}} no-focus"
-                                    wire:click="clear_search"
+                                    wire:click="clearSearch"
                                     title="Clear Filters"
                                 >
                                     <i class="fa-solid fa-xmark"></i>
@@ -69,7 +141,7 @@
                                 <button 
                                     type="button" 
                                     class="btn btn-outline-info no-focus"
-                                    wire:click="update_search"
+                                    wire:click="updateSearch"
                                     title="Apply Filters"
                                 >
                                     <i class="fa-solid fa-filter"></i>
@@ -87,7 +159,7 @@
                          <div 
                             class="table-wrapper zoomIn"
                             wire:loading.class.remove="zoomIn"
-                            wire:target="gotoPage, nextPage, previousPage, update_search, select_designation, clear_designation, deleteConfirmed"
+                            wire:target="gotoPage, nextPage, previousPage, updateSearch, clearSearch, selectDesignation, clearDesignation, deleteConfirmed"
                          >    
                             <table class="table table-compact mobile-stacked-table">
                                 <thead>

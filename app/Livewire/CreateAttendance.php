@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use Illuminate\Validation\ValidationException;
+
 use Livewire\Component;
 use Livewire\Attributes\Title;
 use Livewire\WithPagination;
@@ -12,6 +14,7 @@ use Carbon\CarbonPeriod;
 use App\Models\Employee;
 use Livewire\Attributes\Validate;
 
+
 #[Title('Attendances')] 
 class CreateAttendance extends Component
 {
@@ -20,10 +23,13 @@ class CreateAttendance extends Component
     
     protected     $paginationTheme = 'bootstrap';
 
+    #[Validate('required|numeric|gte:2000|lte:3000')]
     public int $year;
 
+    #[Validate('required|numeric|gte:0|lte:12')]
     public int $month;
 
+    #[Validate('required|numeric|gte:1|lte:6')]
     public int $week;
 
     public int $total_weeks;
@@ -41,7 +47,20 @@ class CreateAttendance extends Component
         $this->updateAttendanceChart() ;
     }
 
+    // protected $rules = [
+    //     'year'  => 'required|max:4',
+    //     'month' => 'required|between:1,12',
+    // ];
+ 
+    // public function updatingYear( $name, $value )
+    // {
+    //     // $this->validateOnly('year');
+    //     // dd();
+    // }
+
     public function updateAttendanceChart() {
+        $this->validate();
+        // $this->validateOnly('year',[]);
         $this->updateFilters();
         $this->updateDaysByWeek();
         $this->dispatch('init-time-picker');
@@ -84,9 +103,24 @@ class CreateAttendance extends Component
 
     public function getTotalWeeks() {
 
-        $start_of_month = Carbon::createFromDate((int) $this->year, $this->month, 1)->startOfMonth();
-        $end_of_month   = Carbon::createFromDate((int) $this->year, $this->month, 1)->endOfMonth();
-        return ceil($start_of_month->diffInWeeks($end_of_month));
+        $date  = Carbon::createFromDate((int) $this->year, $this->month, 1)->startOfMonth();
+        // $end_of_month   = Carbon::createFromDate((int) $this->year, $this->month, 1)->endOfMonth();
+        $total_week = 0;
+
+        if( !$date->isSunday() ) {
+            $total_week++;
+        }
+        $iter_count = Carbon::now()->month( $this->month )->daysInMonth;
+        for ( $i=0; $i < ($iter_count - 1); $i++) { 
+
+            // $date = Carbon::createFromDate((int) $this->year, $this->month, $i);
+            $date->addDay();
+            if( $date->isSunday() ) {
+                $total_week++;
+            }
+        }
+        return $total_week;
+        // return ceil($start_of_month->diffInWeeks($end_of_month));
 
     }
 
@@ -111,6 +145,8 @@ class CreateAttendance extends Component
             $employees->where('name', 'like','%'. $this->search.'%');
 
             $employees->orWhere('email','like','%'. $this->search.'%');
+
+            $employees->orWhere('phone','like','%'. $this->search.'%');
 
             $employees->orWhereHas('designation',function ($query)  {
                 

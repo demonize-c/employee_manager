@@ -20,21 +20,21 @@ class Employees extends Component
 
     use WithPagination;
     
-    public string $search_name  = '';
+    public ?string   $search_name   = '';
 
-    public string $search_phone = '';
+    public ?string   $search_phone  = '';
 
-    public string  $search_dsg_id   = '';
+    public ?string  $search_dsg_id   = null;
 
-    public string  $search_dsg_name = '';
+    public ?string  $search_dsg_name = null;
 
-    public string  $search_dsg_text = '';
+    public ?string   $search_dsg_text = '';
 
-    protected     $queryString = ['search_name', 'search_phone','search_dsg_id','search_dsg_name'];
+    protected array $queryString = ['search_name', 'search_phone','search_dsg_id','search_dsg_name'];
 
-    public bool   $open_desig = false;
+    // public bool   $open_desig = false;
 
-    public        $designation_options;
+    // public        $designation_options;
 
     protected     $paginationTheme = 'bootstrap';
 
@@ -42,17 +42,17 @@ class Employees extends Component
 
     //public bool    $loading  = true;
 
-    public string  $loading_hash;
+    // public string  $loading_hash;
 
     public bool    $filter_applied = false;
 
-    #[Locked] 
-    public $old_hash;
+    // #[Locked] 
+    // public $old_hash;
 
-    public string $new_hash = 'xx';
+    // public string $new_hash = 'xx';
 
     public function mount(){
-            $this->loading_hash = Str::random(10);
+           // $this->loading_hash = Str::random(10);
             //$this->update_designation_options();
             // $this->update_filter_flag();
             // $this->dispatch('on-load');
@@ -72,7 +72,7 @@ class Employees extends Component
     //     $this->designation_options = $this->get_designations();
     // }
 
-    public function select_designation( $designation ){
+    public function selectDesignation( $designation ){
        
         $this->search_dsg_id   = $designation['id'];
         $this->search_dsg_name = $designation['name'];
@@ -80,7 +80,7 @@ class Employees extends Component
         $this->update_search();
     }
 
-    public function clear_designation(){
+    public function clearDesignation(){
        
         $this->search_dsg_id   = '';
         $this->search_dsg_name = '';
@@ -132,13 +132,13 @@ class Employees extends Component
         }
     }
 
-    public function update_search()
+    public function updateSearch()
     {
         $this->update_filter_flag();
         $this->resetPage();
     }
 
-    public function clear_search()
+    public function clearSearch()
     {
         $this->search_phone    = '';
         $this->search_dsg_id   = '';
@@ -173,7 +173,7 @@ class Employees extends Component
         
         return view('livewire.employees',[
             'employees' => $employees,
-            'loading'   => $this->new_hash === 'xx' || $this->old_hash !== $this->new_hash
+            'designation_options' => Designation::where('name','like','%'. $this->search_dsg_text.'%')->limit(10)->get()
         ])->extends('layouts.app');
     }
 }

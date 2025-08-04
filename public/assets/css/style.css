@@ -99,8 +99,9 @@ body {
     padding: 0.5rem 0.75rem;
     width: 100%;
     outline: none;
-    font-size: 0.9rem;
+    font-size: 0.9rem !important;
 }
+
   
 .select2-results {
     list-style: none;
@@ -123,6 +124,11 @@ body {
 /* .select2-container:focus-within .select2-dropdown {
     display: block;
 } */
+
+input.text-sm , select.text-sm{
+    font-size:.9rem !important;
+    font-family: sans-serif;
+}
 
 .image-preview-wrapper {
     max-width: 100%;
@@ -153,6 +159,7 @@ body {
     font-weight:500;
     line-height: 1.2 !important;
     vertical-align: middle !important;
+    
 }
 
 .table-compact thead tr th{
@@ -188,26 +195,23 @@ body {
     padding: 1rem 2rem !important;
 }
 
-
-#attendance_table thead tr th.action-col {
-    font-size: 0.95rem;
-    width:30px !important;
-    padding-left: .8rem !important;
-    padding-right:.8rem !important;
-}
-
 #attendance_table tbody tr td{
     padding:0 !important;
     font-size: 0.75rem;
     position: relative; 
+    font-family: 'sans-serif';
 }
 
-#attendance_table tbody tr td:first-child{
-    font-size: 0.8rem;
+#attendance_table thead tr th:first-child ,
+#attendance_table tbody tr td:first-child
+{
     background-color: #f9f9f9 !important;
     position: sticky;
     left:-1px;
     z-index: 2;
+}
+#attendance_table tbody tr td:first-child {
+    padding-left:18px !important;
 }
 
 #attendance_table td .edit-btn{

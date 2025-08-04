@@ -23,14 +23,19 @@
            <div class="col-md-8">
                 <div class="row justify-content-start" id="searchForm">
                     <div class="col-md-5 mb-2">
-                         <input 
-                            type="text"
-                            class="form-control form-control-sm" 
-                            id="searchName"  
-                            placeholder ="Search by Name"   
-                            wire:model ="search_name" 
-                            wire:keydown.enter ="updateSearch"
-                        >
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                 <i class="fa fa-search"></i>
+                            </span>
+                            <input 
+                                type="text"
+                                class="form-control text-sm" 
+                                id="searchName"  
+                                placeholder ="Search by Name"   
+                                wire:model ="search_name" 
+                                wire:keydown.enter ="updateSearch"
+                            >
+                        </div>
                     </div>
             </div>
            </div>
