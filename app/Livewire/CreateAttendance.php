@@ -32,6 +32,8 @@ class CreateAttendance extends Component
 
     public $attendances = [];
 
+    public string $search = '';
+
     public function mount() {
         $this->year     = Carbon::now()->year;
         $this->month    = Carbon::now()->month;
@@ -88,16 +90,36 @@ class CreateAttendance extends Component
 
     }
 
-
-    public function updatedPage($page)
-    {
-        // Runs after the page is updated for this component...
-        $this->dispatch('init-time-picker');
+    public function updateSearch() {
+        
+        $this->resetPage();
     }
+
+
+    // public function updatedPage($page)
+    // {
+    //     // Runs after the page is updated for this component...
+    //     $this->dispatch('init-time-picker');
+    // }
 
     public function render()
     {
-        $employees = Employee::orderBy('id','desc')->paginate(10);
+        $employees = Employee::query();
+        
+        if( $this->search ){
+             
+            $employees->where('name', 'like','%'. $this->search.'%');
+
+            $employees->orWhere('email','like','%'. $this->search.'%');
+
+            $employees->orWhereHas('designation',function ($query)  {
+                
+                $query->where('name', 'like', '%'. $this->search.'%');
+            });
+        }
+
+        $employees = $employees->orderBy('id','desc')->paginate(10);
+
         return view('livewire.create-attendance',compact('employees'))->extends('layouts.app');
     }
 }

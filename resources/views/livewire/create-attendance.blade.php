@@ -66,12 +66,20 @@
         @endfor
       </select>
     </div>
+    <div class="col-md-3  mb-2 mb-md-0">
+    <div class="input-group">
+        <div class="input-group-append">
+          <i class="input-group-text fa fa-search h-100"></i>
+        </div>
+        <input type="text" name="" id="" class="form-control form-control-sm no-focus" wire:model="search" wire:keyup.enter="updateSearch">
+     </div>
+    </div>
     <!-- <div class="col-md-3 col-6 d-flex align-items-end">
       <a href="javascript:void(0)" class="btn btn-primary btn-sm w-100" wire:click="updateSearch"><i class="fas fa-search"></i> Search</a>
     </div> -->
   </div>
   <div class="row justify-content-center">
-    <div class="table-responsive zoomIn" wire:loading.class.remove="zoomIn" wire:target="gotoPage, nextPage, previousPage, updateAttendanceChart">
+    <div class="table-responsive zoomIn" wire:loading.class.remove="zoomIn" wire:target="gotoPage, nextPage, previousPage, updateAttendanceChart, updateSearch">
           <table id="attendance_table" class="table table-bordered text-nowrap mobile-stacked-table">
               <thead>
                   <tr>
