@@ -188,6 +188,14 @@ body {
     padding: 1rem 2rem !important;
 }
 
+
+#attendance_table thead tr th.action-col {
+    font-size: 0.95rem;
+    width:30px !important;
+    padding-left: .8rem !important;
+    padding-right:.8rem !important;
+}
+
 #attendance_table tbody tr td{
     padding:0 !important;
     font-size: 0.75rem;
@@ -205,7 +213,17 @@ body {
 #attendance_table td .edit-btn{
     position: absolute;
     top: 2px;
-    right: 2px;
+    right: 20px;
+    font-size: 0.65rem;
+    pointer-events:none;
+    cursor: none;
+    color:#e0e0e0;
+}
+
+#attendance_table td .del-btn{
+    position: absolute;
+    top: 2px;
+    right: 4px;
     font-size: 0.65rem;
     pointer-events:none;
     cursor: none;
@@ -216,6 +234,11 @@ body {
   pointer-events:auto;
   cursor: pointer;
   color: #0d6efd;
+}
+#attendance_table td .del-btn.active{
+    pointer-events:auto;
+    cursor: pointer;
+    color: var(--bs-danger);
 }
 
 #attendance_table tr.no-data td{
@@ -349,6 +372,16 @@ body {
     }
     #attendance_table td .edit-btn{
         top:50% !important;
-        right:20px;
+        right:40px !important;
     }
+    #attendance_table td .del-btn{
+        top:50% !important;
+        right:20px !important;
+    }
+    .form-select.mobile-resize{
+        font-size:1.2rem;
+        width:300px  !important;
+        height:500px !important;
+    }
+
 }

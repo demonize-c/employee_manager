@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Attendance;
+use Carbon\Carbon;
 
 class AttendanceInput extends Component
 {
@@ -19,7 +20,7 @@ class AttendanceInput extends Component
 
     public string $type;
 
-    public string $time;
+    public ?string $time;
 
     public bool   $synced = false;
 
@@ -49,6 +50,22 @@ class AttendanceInput extends Component
             $attendance = Attendance::where('date', $this->date)
                             ->where('employee_id', $this->employee_id)
                             ->first();
+            if( $attendance ) { 
+               $check_in = $check_out = null;
+               if($this->type === 'check_in') {
+                   $check_in  = Carbon::parse($attendance->date .' '. $this->time);
+                   $check_out = Carbon::parse($attendance->date .' '. $attendance->check_out);
+               }
+               if($this->type === 'check_out') {
+                  $check_in  = Carbon::parse($attendance->date .' '. $attendance->check_in );
+                  $check_out = Carbon::parse($attendance->date .' '. $this->time);
+               }
+               if( $check_in && $check_out ) {
+                   if( !$check_in->isBefore( $check_out ) ){
+                        throw new \Exception('Invalid '. join(' ',explode('_',$this->type)).' time.');
+                   }
+               }
+            }
                             
             if( !$attendance ) {
 
@@ -64,6 +81,37 @@ class AttendanceInput extends Component
             $this->time   = $attendance->{ $this->type };
             $this->synced = true;
             $this->notify( true, 'Attendance saved successfully' );
+
+          }catch(\Exception $e) {
+               $this->notify( false, $e->getMessage()?? 'Error occured' );
+          }
+    }
+
+    public function delete() {
+         
+        try {
+             
+            $attendance = Attendance::where('date', $this->date)
+                            ->where('employee_id', $this->employee_id)
+                            ->first();
+                            
+            if( !$attendance ) {
+                $this->notify( false, 'Attendance not found.');
+                return;
+            }
+
+            $attendance->{$this->type}  = null;
+            $attendance->save();
+            if( 
+               !$attendance->check_in && 
+               !$attendance->check_out
+            ){
+                $attendance->delete();
+            }
+
+            $this->time   = null;
+            $this->synced = false;
+            $this->notify( true, 'Attendance deleted successfully' );
 
           }catch(\Exception $e) {
                $this->notify( false, $e->getMessage()?? 'Error occured' );
