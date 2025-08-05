@@ -4,6 +4,7 @@
     open:false,
     time: @entangle('time'),
     synced: @entangle('synced'),
+    hasRun:false,
     loadingStart() {
             $refs.box.classList.remove('bg-honeydew2');
             $refs.deleteButton.classList.remove('active');
@@ -27,9 +28,7 @@
         }
     }" 
     x-init="
-        setTimeout(() =>  {
-               loadingEnd();
-        }, 500);
+       
 
         $($refs.picker).timepicker({
             timeFormat: 'H:i:s',
@@ -56,7 +55,16 @@
             }, 1000);
         });
     "
+    x-effect="
+      if( time && !hasRun){
+        setTimeout(() => { 
+            loadingEnd();
+            hasRun=true;
+        }, 500);
+      }
+    "
     wire:init="load_data"
+
     >
     <input
      wire:ignore 
