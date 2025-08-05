@@ -3,9 +3,12 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\Attributes\Isolate;
+
 use App\Models\Attendance;
 use Carbon\Carbon;
 
+#[Isolate]
 class AttendanceInput extends Component
 {
 
@@ -22,7 +25,7 @@ class AttendanceInput extends Component
 
     public ?string $time;
 
-    public bool   $synced = false;
+    public ?bool $synced;
 
     public function mount( $date, $employee_id, $type ) {
         
@@ -34,19 +37,26 @@ class AttendanceInput extends Component
     public function load_data() {
 
         $attendance = Attendance::where('date', $this->date)->where('employee_id', $this->employee_id)->first();
-        if( $attendance ){
-            if( $attendance->{ $this->type } ) {
-                $this->time = $attendance->{ $this->type };
-                $this->synced = true;
-            }
+        if( !$attendance ){
+            $this->time   = '__:__ __';
+            $this->synced = false;
+            return;
         }
+        if( !$attendance->{ $this->type } ) {
+            $this->time   = '__:__ __';
+            $this->synced = false;
+            return;
+        }
+            
+        $this->time = $attendance->{ $this->type };
+        $this->synced = true;
+         
     }
     
 
     public function save() {
           
           try {
-             
             $attendance = Attendance::where('date', $this->date)
                             ->where('employee_id', $this->employee_id)
                             ->first();
@@ -90,7 +100,6 @@ class AttendanceInput extends Component
     public function delete() {
          
         try {
-             
             $attendance = Attendance::where('date', $this->date)
                             ->where('employee_id', $this->employee_id)
                             ->first();
