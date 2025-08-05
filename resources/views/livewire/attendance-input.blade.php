@@ -1,12 +1,36 @@
 <div class="py-3 px-4 text-center" 
-    :class="{'readonly-cell':!open,'editonly-cell':open,'bg-honeydew2': synced && !loading}" 
-    x-data="{open:false,time: @entangle('time'),synced: @entangle('synced'), display: null, loading:false}" 
+    x-ref="box"
+    x-data="{
+    open:false,
+    time: @entangle('time'),
+    synced: @entangle('synced'),
+    loadingStart() {
+            $refs.box.classList.remove('bg-honeydew2');
+            $refs.deleteButton.classList.remove('active');
+            $refs.pickerButton.classList.remove('active');
+    },
+    loadingEnd( update = true ) {
+
+            if( this.time && this.synced ) {
+               $refs.box.classList.add('bg-honeydew2');
+               $refs.deleteButton.classList.add('active');
+               if( update ) {
+                  $refs.display.textContent = this.time;
+               }
+            } 
+            if( !this.time && !this.synced ) {
+               $refs.box.classList.remove('bg-honeydew2');
+               $refs.deleteButton.classList.remove('active');
+               $refs.display.textContent =  '__:__ __';
+            } 
+            $refs.pickerButton.classList.add('active');
+        }
+    }" 
     x-init="
-         loading=true;
-         setTimeout(() =>  {
-                     display = time;
-                     loading = false;
+        setTimeout(() =>  {
+               loadingEnd();
         }, 500);
+
         $($refs.picker).timepicker({
             timeFormat: 'H:i:s',
             interval: 30,
@@ -14,7 +38,8 @@
             scrollbar: true,
             className:'form-select mobile-resize'
         });
-        $($refs.picker_btn).on('click', function () {
+
+        $($refs.pickerButton).on('click', function () {
             $($refs.picker).timepicker('show');
         });
 
@@ -24,12 +49,11 @@
 
         $wire.on('attendance.{{$date}}.{{$employee_id}}', function({ success, message }) {
               setTimeout(() =>  {
-                    loading = false;
-                    display = time;
+                    loadingEnd(success);
                     if( !success ) {
                         notify({ type: ('error'), message });
                     }
-            }, 500);
+            }, 1000);
         });
     "
     wire:init="load_data"
@@ -39,9 +63,10 @@
      x-ref="picker" 
      type="time" 
      class="form-control timepicker no-focus opacity-0 zero-dimension" 
-     @change="loading=true; time=$event.target.value; $wire.call('save')"
+     @change="loadingStart(); time=$event.target.value; $wire.call('save')"
     >
-    <span class="time-display"  x-text="display? convertTo12Hour(display): '__:__ __'"></span>
-    <i wire:ignore class="fas fa-pen   edit-btn" x-ref="picker_btn" :class="{'active':!loading}"></i>
-    <i wire:ignore class="fas fa-trash del-btn"  :class="{'active':(!loading && time)}" @click="loading=true;$wire.call('delete');"></i>
+    <span wire:ignore class="time-display"  x-ref="display" >__:__ __</span>
+    <i class="fas fa-pen   edit-btn" x-ref="pickerButton" ></i>
+    <i class="fas fa-trash del-btn"  x-ref="deleteButton" @click="loadingStart(); $wire.call('delete');"></i>
 </div>
+

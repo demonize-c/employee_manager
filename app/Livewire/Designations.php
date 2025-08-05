@@ -63,7 +63,7 @@ class Designations extends Component
         $designations = Designation::query();
 
         if( $this->search_name){
-            $designations->where('name','like','%'. $this->search_name .'%');
+            $designations->whereLike('name','%'. $this->search_name .'%');
         }
 
         $designations = $designations->orderBy('id','desc')->paginate(5);

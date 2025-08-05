@@ -52,11 +52,11 @@ class AttendanceInput extends Component
                             ->first();
             if( $attendance ) { 
                $check_in = $check_out = null;
-               if($this->type === 'check_in') {
+               if($this->type === 'check_in' && $attendance->check_out ) {
                    $check_in  = Carbon::parse($attendance->date .' '. $this->time);
                    $check_out = Carbon::parse($attendance->date .' '. $attendance->check_out);
                }
-               if($this->type === 'check_out') {
+               if($this->type === 'check_out' && $attendance->check_in) {
                   $check_in  = Carbon::parse($attendance->date .' '. $attendance->check_in );
                   $check_out = Carbon::parse($attendance->date .' '. $this->time);
                }

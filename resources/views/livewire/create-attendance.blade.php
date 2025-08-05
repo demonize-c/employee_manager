@@ -142,9 +142,9 @@
 
                                 </td>
                                 @foreach($periods as $date)
-                                  <td data-title="In at {{date('d, M', strtotime($date))}}"><livewire:attendance-input  wire:key="attendance-{{ $date }}-{{ $employee->id }}-check-in" :date="$date" :employee_id="$employee->id" :type="'check_out'"></td>
+                                  <td data-title="In at {{date('d, M', strtotime($date))}}"><livewire:attendance-input  wire:key="attendance-{{ $date }}-{{ $employee->id }}-check-in" :date="$date" :employee_id="$employee->id" :type="'check_in'"></td>
                                   
-                                  <td data-title="Out at {{date('d, M', strtotime($date))}}"><livewire:attendance-input  wire:key="attendance-{{ $date }}-{{ $employee->id }}-check-out"  :date="$date" :employee_id="$employee->id" :type="'check_in'"></td>
+                                  <td data-title="Out at {{date('d, M', strtotime($date))}}"><livewire:attendance-input  wire:key="attendance-{{ $date }}-{{ $employee->id }}-check-out"  :date="$date" :employee_id="$employee->id" :type="'check_out'"></td>
                                 @endforeach
                             </tr>
                         @endforeach

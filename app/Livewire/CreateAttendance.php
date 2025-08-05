@@ -142,15 +142,15 @@ class CreateAttendance extends Component
         
         if( $this->search ){
              
-            $employees->where('name', 'like','%'. $this->search.'%');
+            $employees->whereLike('name', '%'. $this->search.'%');
 
-            $employees->orWhere('email','like','%'. $this->search.'%');
+            $employees->orWhereLike('email','%'. $this->search.'%');
 
-            $employees->orWhere('phone','like','%'. $this->search.'%');
+            $employees->orWhereLike('phone','%'. $this->search.'%');
 
             $employees->orWhereHas('designation',function ($query)  {
                 
-                $query->where('name', 'like', '%'. $this->search.'%');
+                $query->whereLike('name','%'. $this->search.'%');
             });
         }
 

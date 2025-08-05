@@ -154,11 +154,11 @@ class Employees extends Component
         $employees = Employee::query();
         
         if( $this->search_name){
-            $employees->where('name','like','%'. $this->search_name .'%');
+            $employees->whereLike('name','%'. $this->search_name .'%');
         }
 
         if( $this->search_phone){
-            $employees->where('phone','like','%'. $this->search_phone .'%');
+            $employees->whereLike('phone','%'. $this->search_phone .'%');
         }
 
         if( 

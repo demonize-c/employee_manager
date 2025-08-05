@@ -63,6 +63,7 @@ class EditEmployee extends Component
 
     public function rules()
     {
+      
       return [
           'name' => [
              'required',
@@ -74,7 +75,7 @@ class EditEmployee extends Component
           ],
           'phone' => [ 
               'required',
-              'digits:10'
+              'regex:/^(\+\d{1,3}\s?)?(\d{1,4}\s?[\-\.]?)?(\(\d{2,5}\)\s?[\-\.]?)?\d{3,4}([\s\-\.]?\d{4})?$/'
           ],
           'designation_id'=> [
              'required',
