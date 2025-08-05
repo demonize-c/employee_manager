@@ -115,9 +115,14 @@
                                       <div x-data="{ preview: '{{$employee->photoUrl()}}' }" class="row g-3 align-items-start">
                                         <div class="col-md-4 text-center">
                                              <div class="image-preview-wrapper border rounded">
-                                                  <template  x-if="preview">
-                                                       <img  id="preview-image" :src="preview"  class="img-fluid preview-img" alt="Image Preview">
-                                                  </template>
+                                                  <span wire:loading.remove wire:target="photo">
+                                                       <template  x-if="preview">
+                                                            <img  id="preview-image" :src="preview"  class="img-fluid preview-img" alt="Image Preview">
+                                                       </template>
+                                                  </span>
+                                                  <span  wire:loading wire:target="photo">
+                                                       Uploading..
+                                                  </span>
                                              </div>
                                         </div>
                                         <div class="col-md-8">
@@ -130,8 +135,8 @@
                                                   wire:model="photo"
                                              >
                                              <div class="form-text">
-                                             Max file size: 2MB. <br> Allowed formats: JPG, JPEG, PNG, WebP. <br> 
-                                             Use a short file name.
+                                                  Max file size: 2MB. <br> Allowed formats: JPG, JPEG, PNG, WebP. <br> 
+                                                  Use a short file name.
                                              </div>
                                         </div>
                                    </div>
@@ -151,6 +156,7 @@
                            " 
                            x-text="!loading? 'Update':'Updating..'"
                            :disabled="loading"
+                           wire:loading.attr="disabled" wire:target="photo"
                            ></button>
                     </div>
                 </div>
