@@ -105,18 +105,6 @@ class EditEmployee extends Component
          try{
 
             $this->validate();
-          
-            $filename = null;
-  
-            if( $this->photo ) {
-               $filename = Str::random(15).'-'.time().'.'.$this->photo->getClientOriginalExtension();
-               $this->photo->storeAs('employee_pictures',  $filename , 'public');
-               
-               $old_path = public_path('media/employee_pictures/'. $this->employee->photo);
-               if ( file_exists($old_path) ) {
-                   unlink( $old_path );
-               }
-            }
 
             $fileinfo = null;
             
@@ -151,7 +139,7 @@ class EditEmployee extends Component
             $this->notify( false, 'Validation failure occurred.');
             throw $e;
          }catch(\Exception $e){
-            $this->notify(false, 'Failed to update employee.');
+            $this->notify(false, $e->getMessage().'Failed to update employee.');
          }
     }
 

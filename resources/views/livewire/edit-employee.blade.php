@@ -129,7 +129,10 @@
                                                   @change="preview = URL.createObjectURL($event.target.files[0])"
                                                   wire:model="photo"
                                              >
-                                             <div class="form-text">Max size 2MB. Accepted: JPG, PNG, WebP</div>
+                                             <div class="form-text">
+                                             Max file size: 2MB. <br> Allowed formats: JPG, JPEG, PNG, WebP. <br> 
+                                             Use a short file name.
+                                             </div>
                                         </div>
                                    </div>
                                    @error('photo') <small class="text-danger">{{ $message }}  </small> @enderror 
