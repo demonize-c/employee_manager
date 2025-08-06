@@ -24,6 +24,10 @@ The platform works smoothly on both mobile and desktop browsers, making it acces
 ![](assets/images/attendances-page-desktop.svg)
 ![](assets/images/slides-phone.svg)
 
+## 🔗 Demo
+
+🌐 **Live Demo**: [https://employee-manager-668z.onrender.com](https://employee-manager-668z.onrender.com])
+
 
 ## 💻 Setting Up Locally
 
